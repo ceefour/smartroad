@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8"/>
+<title wicket:id="title">Gigastic: Exciting Times Together!</title>
+<meta wicket:id="metaDescription" name="description"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="shortcut icon" href="/favicon.ico"/>
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script src="../bower_components/html5shiv/dist/html5shiv.js"></script>
+<script src="../bower_components/respond/dest/respond.min.js"></script>
+<![endif]-->
+</head>
+<body>
+<!-- header -->
+<header class="header">
+    <div class="container">
+        <!-- logo -->
+        <div class="logo">
+            <a href="/"><img src="/img/gigastic-128.png" alt="Gigastic: Exciting times together. Menjelajah bareng ceria!" height="28"/>igastic</a>
+        </div>
+        <!-- /logo -->
+        <!-- top-nav -->
+        <nav class="top-nav">
+            <span class="menu"> </span>
+            <ul>
+                <li><a href="/">Beranda</a></li>
+                <li x-class="active"><a href="/id/bandung">Bandung</a></li>
+                <div class="clearfix"> </div>
+            </ul>
+        </nav>
+        <!-- script-for-nav -->
+        <script>
+            $(document).ready(function(){
+                $("span.menu").click(function(){
+                    $(".top-nav ul").slideToggle(1000);
+                });
+            });
+        </script>
+        <!-- script-for-nav -->
+        <!-- /top-nav -->
+        <div class="clearfix"> </div>
+    </div>
+    <!-- /header -->
+</header>
+<!-- //End-banner-->
+
+<wicket:child/>
+
+</body>
+</html>
