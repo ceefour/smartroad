@@ -1,11 +1,11 @@
 package com.hendyirawan.betterroads.core;
 
-import org.soluvas.data.repository.PagingAndSortingRepository;
-
-import java.util.UUID;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Created by ceefour on 28/04/2015.
  */
+@Repository
 public interface RoadRepository extends PagingAndSortingRepository<Road, Long> {
 }

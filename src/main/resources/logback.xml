@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="15 seconds">
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="org.soluvas" level="DEBUG"/>
+    <logger name="com.soluvas" level="DEBUG"/>
+    <logger name="id" level="DEBUG"/>
+    <logger name="com.hendyirawan" level="DEBUG"/>
+    <logger name="org.hibernate.SQL" level="INFO"/>
+    <!--<logger name="org.springframework.boot" level="DEBUG"/>
+    <logger name="org.springframework.data" level="DEBUG"/>-->
+    <logger name="org.springframework.web.servlet.mvc.method.annotation" level="DEBUG"/>
+    <logger name="org.scribe" level="DEBUG"/>
+</configuration>

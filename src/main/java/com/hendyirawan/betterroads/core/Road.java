@@ -2,21 +2,21 @@ package com.hendyirawan.betterroads.core;
 
 import org.joda.time.DateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * Created by ceefour on 29/04/2015.
  */
 @Entity
+@Table(schema = "smartroad")
 public class Road implements Serializable {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(columnDefinition = "text")
+    private String description;
     private Double width;
     private Double startLat;
     private Double startLon;
@@ -41,6 +41,14 @@ public class Road implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Double getWidth() {

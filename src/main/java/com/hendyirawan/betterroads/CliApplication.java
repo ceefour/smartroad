@@ -1,7 +1,6 @@
 package com.hendyirawan.betterroads;
 
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
@@ -11,13 +10,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.annotation.Profile;
 
 import java.io.File;
 
 @SpringBootApplication
-public class BetterRoadsApplication implements CommandLineRunner {
+@Profile("cli")
+public class CliApplication implements CommandLineRunner {
 
-    private static Logger log = LoggerFactory.getLogger(BetterRoadsApplication.class);
+    private static Logger log = LoggerFactory.getLogger(CliApplication.class);
 
     static {
         log.info("Loading OpenCV: {}", Core.NATIVE_LIBRARY_NAME);
@@ -25,7 +27,7 @@ public class BetterRoadsApplication implements CommandLineRunner {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(BetterRoadsApplication.class, args);
+        new SpringApplicationBuilder(CliApplication.class).profiles("cli").run(args);
     }
 
     @Override

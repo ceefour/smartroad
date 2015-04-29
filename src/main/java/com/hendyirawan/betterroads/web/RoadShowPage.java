@@ -1,46 +1,49 @@
 package com.hendyirawan.betterroads.web;
 
-import java.util;
-import javax.inject.Inject;
-
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.model.*;
+import com.hendyirawan.betterroads.core.Road;
+import com.hendyirawan.betterroads.core.RoadRepository;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.soluvas.commons.SlugUtils;
-import org.soluvas.web.bootstrap.widget.*;
 import org.springframework.core.env.Environment;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.wicketstuff.annotation.mount.MountPath;
+
+import javax.inject.Inject;
 
 /**
  * Created by ceefour on 28/12/14.
  */
-@MountPath("/${localePrefId}/bandung")
+@MountPath("/${localePrefId}/roads/${roadId}")
 public class RoadShowPage extends PubLayout {
 
-  private static final Logger log = LoggerFactory.getLogger(RoadShowPage.class);
+    private static final Logger log = LoggerFactory.getLogger(RoadShowPage.class);
 
-  @Inject
-  private RoadRepository roadRepo;
-  @Inject
-  private Environment env;
+    @Inject
+    private RoadRepository roadRepo;
+    @Inject
+    private Environment env;
 
-  @Override
-  public IModel<String> getTitleModel() {
-    return new Model<>("Road");
-  }
+    private IModel<Road> model;
 
-  @Override
-  public IModel<String> getMetaDescriptionModel() {
-    return new Model<>("Road condition");
-  }
+    public RoadShowPage(PageParameters parameters) {
+        super(parameters);
+        final long roadId = parameters.get("roadId").toLong();
+        model = new Model<>(new Road());
+        setDefaultModel(model);
+    }
+
+    @Override
+    public IModel<String> getTitleModel() {
+        return new PropertyModel<>(getDefaultModel(), "name");
+    }
+
+    @Override
+    public IModel<String> getMetaDescriptionModel() {
+        return new PropertyModel<>(getDefaultModel(), "description");
+    }
 
 /*
   val localePrefId = params.get("localePrefId").toString

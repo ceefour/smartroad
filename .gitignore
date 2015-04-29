@@ -33,3 +33,5 @@ build
 out/
 .idea_modules/
 atlassian-ide-plugin.xml
+
+config/application.properties

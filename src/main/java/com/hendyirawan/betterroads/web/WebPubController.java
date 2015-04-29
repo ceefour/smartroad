@@ -1,20 +1,19 @@
 package com.hendyirawan.betterroads.web;
 
-import java.io.IOException;
-import java.time.Duration;
-import java.util.UUID;
-import javax.inject.Inject;
-
+import com.hendyirawan.betterroads.core.RoadRepository;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.soluvas.commons.SlugUtils;
-import org.springframework.beans.support.PagedListHolder;
-import org.springframework.data.domain.*;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.inject.Inject;
+import java.io.IOException;
+import java.time.Duration;
 
 @Controller
 class WebPubController {
@@ -25,10 +24,11 @@ class WebPubController {
     private RoadRepository roadRepo;
 
     @RequestMapping(value = "favicon.ico", method = RequestMethod.GET,
-            produces = "image/vnd.microsoft.icon")
+            produces = "image/png")
+//            produces = "image/vnd.microsoft.icon")
     @ResponseBody
     public ResponseEntity favicon() throws IOException {
-        final byte[] body = IOUtils.toByteArray(WebPubController.class.getResourceAsStream("/com/gigastic/core/gigastic-128.ico"));
+        final byte[] body = IOUtils.toByteArray(WebPubController.class.getResourceAsStream("/com/hendyirawan/betterroads/core/icon-128.png"));
         final HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl("max-age=" + Duration.ofDays(30).getSeconds());
         return ResponseEntity.ok().headers(headers).body(body);
