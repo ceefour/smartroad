@@ -36,11 +36,32 @@
 			<version>1.0</version>
 		</dependency>
 
+		<!--<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>-->
+			<!-- 2.1.7.js2 not found in maven central? but jasperreports 5.1.0 IS in maven central! -->
+			<!--<version>2.1.7</version>
+			<exclusions>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcprov-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk14</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>-->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
             <version>6.0.4</version>
         </dependency>
+		<!--<dependency>
+			<groupId>com.jaspersoft.studio.community-edition</groupId>
+			<artifactId>com.jaspersoft.studio.data.mongodb</artifactId>
+			<version>5.1.0.soluvas4</version>
+		</dependency>-->
 
 		<dependency>
 			<groupId>org.soluvas</groupId>
@@ -205,6 +226,22 @@
 			<url>http://nexus.bippo.co.id/nexus/content/groups/public/</url>
 			<snapshots>
 				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<!-- FIXME: is this still needed? -->
+			<id>jasperreports</id>
+			<url>http://jasperreports.sourceforge.net/maven2/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<!-- Required for JasperReports 5.5.2 -->
+			<id>jaspersoft-third-party-ce-artifacts</id>
+			<url>http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts/</url>
+			<snapshots>
+				<enabled>false</enabled>
 			</snapshots>
 		</repository>
 	</repositories>
