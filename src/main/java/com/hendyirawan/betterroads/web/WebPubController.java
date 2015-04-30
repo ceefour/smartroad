@@ -4,6 +4,7 @@ import com.hendyirawan.betterroads.core.RoadRepository;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.time.Duration;
 
 @Controller
+@Profile("daemon")
 class WebPubController {
 
     private static final Logger log = LoggerFactory.getLogger(WebPubController.class);

@@ -2,9 +2,10 @@ package com.hendyirawan.betterroads.web;
 
 import com.hendyirawan.betterroads.core.Road;
 import com.hendyirawan.betterroads.core.RoadRepository;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
+import com.opencsv.CSVWriter;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
+import org.apache.wicket.markup.html.link.DownloadLink;
+import org.apache.wicket.model.*;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,9 @@ import org.springframework.core.env.Environment;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.inject.Inject;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Created by ceefour on 28/12/14.
@@ -31,8 +35,56 @@ public class RoadShowPage extends PubLayout {
     public RoadShowPage(PageParameters parameters) {
         super(parameters);
         final long roadId = parameters.get("roadId").toLong();
-        model = new Model<>(new Road());
+        final Road road = new Road();
+        road.setName("Jl. Ir. H. Juanda");
+        model = new Model<>(road);
         setDefaultModel(model);
+
+        add(new DownloadLink("exportExcel", new AbstractReadOnlyModel<File>() {
+            @Override
+            public File getObject() {
+                try {
+                    final File file = File.createTempFile("road", ".csv");
+                    try (final FileWriter fileWriter = new FileWriter(file)) {
+                        try (final CSVWriter csv = new CSVWriter(fileWriter)) {
+                            /*
+<strong style="color: red">Kerusakan: POTHOLES (BERLOBANG)</strong>
+
+<p>Penurunan berbentuk cekungan dari permukaan perkerasan sampai seluruh lapisan hotmix sampai ke base coursenya,umumnya mempunyai sisi yg tajam dan vertikal dekat sisi dari lobang, lobang biasa terjadi pada jalan yg
+mempunyai hotmix yg tipis 25 sampai 50 mm dan jarang terjadi pada jalan hot mix yg tebal 100 mm.</p>
+<p><strong>Masalah yg timbul:</strong> roughness, infiltrasi air pada perkerasan</p>
+<p><strong>Penyebab yg mungkin:</strong> umumnya, lobang merupakan hasil dari retak buaya, lalu berlanjut akibat lalu lintas terlepasnya bagian retak menjadi lobang.</p>
+
+<p><strong>Perbaikan:</strong> dengan penambalan.</p>
+
+                             */
+                            csv.writeNext(new String[] {
+                                    "roadId", "name", "lat", "lon", "ele", "damage",
+                                    "damageDescription",
+                                    "problems",
+                                    "causes",
+                                    "repair",
+                                    "damageLevel",
+                                    "damageLength", "damageWidth", "damageDepth", "damageVolume"});
+                            csv.writeNext(new String[] {
+                                    "1", "Jl. Ir. H. Juanda", "-6.3453469", "169.234873", "450",
+                                    "POTHOLES (BERLOBANG)",
+                                    "Penurunan berbentuk cekungan dari permukaan perkerasan sampai seluruh lapisan hotmix sampai ke base coursenya,umumnya mempunyai sisi yg tajam dan vertikal dekat sisi dari lobang, lobang biasa terjadi pada jalan yg\n" +
+                                            "mempunyai hotmix yg tipis 25 sampai 50 mm dan jarang terjadi pada jalan hot mix yg tebal 100 mm.",
+                                    "roughness, infiltrasi air pada perkerasan",
+                                    "umumnya, lobang merupakan hasil dari retak buaya, lalu berlanjut akibat lalu lintas terlepasnya bagian retak menjadi lobang.",
+                                    "dengan penambalan",
+                                    "MEDIUM",
+                                    "7.89 cm", "5.22 cm", "3.4 cm", "25.3 cm^3"
+                            });
+                        }
+                    }
+                    return file;
+                } catch (IOException e) {
+                    throw new RuntimeException("Error", e);
+                }
+            }
+        }));
     }
 
     @Override

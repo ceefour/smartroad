@@ -9,13 +9,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.autoconfigure.CrshAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Profile;
 
 import java.io.File;
 
-@SpringBootApplication
+@SpringBootApplication(
+    exclude = {//HibernateJpaAutoConfiguration.class,
+            CrshAutoConfiguration.class,
+            WebMvcAutoConfiguration.class}
+)
 @Profile("cli")
 public class CliApplication implements CommandLineRunner {
 
@@ -27,7 +34,10 @@ public class CliApplication implements CommandLineRunner {
     }
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(CliApplication.class).profiles("cli").run(args);
+        new SpringApplicationBuilder(CliApplication.class)
+                .profiles("cli")
+                .web(false)
+                .run(args);
     }
 
     @Override

@@ -11,39 +11,31 @@
 <script src="../bower_components/html5shiv/dist/html5shiv.js"></script>
 <script src="../bower_components/respond/dest/respond.min.js"></script>
 <![endif]-->
+<style>
+body { padding-top: 63px }
+</style>
 </head>
 <body>
 <!-- header -->
-<header class="header">
+<header class="navbar navbar-default navbar-fixed-top">
     <div class="container">
-        <!-- logo -->
-        <div class="logo">
-            <a href="/">Smart Road</a>
+        <div class="navbar-header">
+            <!-- logo -->
+            <div class="logo">
+                <a href="/" class="navbar-brand">Smart Road</a>
+            </div>
+            <!-- /logo -->
         </div>
-        <!-- /logo -->
-        <!-- top-nav -->
-        <nav class="top-nav">
-            <span class="menu"> </span>
-            <ul>
+        <nav class="navbar-collapse collapse" id="navbar-main">
+            <ul class="nav navbar-nav">
                 <li><a href="/">Beranda</a></li>
-                <li x-class="active"><a href="/id/bandung">Bandung</a></li>
+                <li x-class="active"><a href="/id/roads/1">Dago</a></li>
                 <div class="clearfix"> </div>
             </ul>
         </nav>
-        <!-- script-for-nav -->
-        <script>
-            $(document).ready(function(){
-                $("span.menu").click(function(){
-                    $(".top-nav ul").slideToggle(1000);
-                });
-            });
-        </script>
-        <!-- script-for-nav -->
-        <!-- /top-nav -->
-        <div class="clearfix"> </div>
     </div>
-    <!-- /header -->
 </header>
+
 <!-- //End-banner-->
 
 <wicket:child/>
