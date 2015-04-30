@@ -1,6 +1,8 @@
 # Smart Road
 
-Better roads.
+**Automatic Road Damage Detection**
+
+Currently, measurement of road damage levels must be done using manual surveys which require a lot of personnel, time and money. We develop a technology that allow these measurements and related analysis to be done within minutes.
 
 ## Development Setup
 
@@ -19,4 +21,3 @@ Windows:
         ENCODING 'UTF8';
     \c smartroad_smartroad_dev
     CREATE SCHEMA smartroad;
-
