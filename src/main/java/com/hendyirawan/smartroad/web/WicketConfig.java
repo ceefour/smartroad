@@ -1,4 +1,4 @@
-package com.hendyirawan.betterroads.web;
+package com.hendyirawan.smartroad.web;
 
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.spring.SpringWebApplicationFactory;

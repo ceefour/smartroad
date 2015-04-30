@@ -1,6 +1,6 @@
-package com.hendyirawan.betterroads.web;
+package com.hendyirawan.smartroad.web;
 
-import com.hendyirawan.betterroads.core.RoadRepository;
+import com.hendyirawan.smartroad.core.RoadRepository;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,6 +1,5 @@
-package com.hendyirawan.betterroads.web;
+package com.hendyirawan.smartroad.web;
 
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.*;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 

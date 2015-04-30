@@ -1,4 +1,4 @@
-package com.hendyirawan.betterroads.web;
+package com.hendyirawan.smartroad.web;
 
 import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.core.settings.BootstrapSettings;

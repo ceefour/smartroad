@@ -1,4 +1,4 @@
-package com.hendyirawan.betterroads.core;
+package com.hendyirawan.smartroad.core;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;

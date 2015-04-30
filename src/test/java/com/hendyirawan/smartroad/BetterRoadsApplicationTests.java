@@ -1,4 +1,4 @@
-package com.hendyirawan.betterroads;
+package com.hendyirawan.smartroad;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,6 +1,6 @@
-package com.hendyirawan.betterroads.mvc;
+package com.hendyirawan.smartroad.mvc;
 
-import com.hendyirawan.betterroads.core.Road;
+import com.hendyirawan.smartroad.core.Road;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;

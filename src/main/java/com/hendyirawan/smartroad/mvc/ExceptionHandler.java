@@ -1,4 +1,4 @@
-package com.hendyirawan.betterroads.mvc;
+package com.hendyirawan.smartroad.mvc;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

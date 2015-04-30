@@ -1,4 +1,4 @@
-package com.hendyirawan.betterroads.mvc;
+package com.hendyirawan.smartroad.mvc;
 
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.springframework.context.annotation.Bean;

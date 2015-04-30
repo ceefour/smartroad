@@ -1,4 +1,4 @@
-package com.hendyirawan.betterroads.mvc;
+package com.hendyirawan.smartroad.mvc;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

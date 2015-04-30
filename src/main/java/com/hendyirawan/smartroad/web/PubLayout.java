@@ -1,4 +1,4 @@
-package com.hendyirawan.betterroads.web;
+package com.hendyirawan.smartroad.web;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.MetaTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
