@@ -228,16 +228,16 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-		<repository>
-			<!-- FIXME: is this still needed? -->
-			<id>jasperreports</id>
+		<!--repository-->
+			<!-- FIXME: is this still needed? because olap4j etc. are in jaspersoft-third-party-ce-artifacts -->
+			<!--<id>jasperreports</id>
 			<url>http://jasperreports.sourceforge.net/maven2/</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-		</repository>
+		</repository>-->
 		<repository>
-			<!-- Required for JasperReports 5.5.2 -->
+			<!-- Required for JasperReports 5.5.2, olap4j, etc. -->
 			<id>jaspersoft-third-party-ce-artifacts</id>
 			<url>http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts/</url>
 			<snapshots>
