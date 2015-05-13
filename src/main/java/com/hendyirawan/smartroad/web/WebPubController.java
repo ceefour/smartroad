@@ -1,5 +1,6 @@
 package com.hendyirawan.smartroad.web;
 
+import com.hendyirawan.smartroad.core.Road;
 import com.hendyirawan.smartroad.core.RoadRepository;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ class WebPubController {
 //            produces = "image/vnd.microsoft.icon")
     @ResponseBody
     public ResponseEntity favicon() throws IOException {
-        final byte[] body = IOUtils.toByteArray(WebPubController.class.getResourceAsStream("/com/hendyirawan/betterroads/core/icon-128.png"));
+        final byte[] body = IOUtils.toByteArray(Road.class.getResource("../icon-128.png"));
         final HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl("max-age=" + Duration.ofDays(30).getSeconds());
         return ResponseEntity.ok().headers(headers).body(body);
