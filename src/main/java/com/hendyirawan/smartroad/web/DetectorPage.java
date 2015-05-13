@@ -13,7 +13,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.DynamicImageResource;
-import org.apache.wicket.request.resource.IResource;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.highgui.Highgui;
@@ -32,7 +31,8 @@ public class DetectorPage extends PubLayout {
 
     private static final Logger log = LoggerFactory.getLogger(DetectorPage.class);
 
-    private IModel<byte[]> resultBytes = new Model<>();
+    private IModel<byte[]> blurredBytes = new Model<>();
+    private IModel<byte[]> edgesBytes = new Model<>();
 
     @Inject
     private RoadAnalyzer roadAnalyzer;
@@ -41,10 +41,18 @@ public class DetectorPage extends PubLayout {
         super(parameters);
         final ListModel<FileUpload> cameraFilesModel = new ListModel<>();
 
+        final Image blurredImg = new Image("blurredImg", new DynamicImageResource() {
+            @Override
+            protected byte[] getImageData(Attributes attributes) {
+                return blurredBytes.getObject();
+            }
+        });
+        blurredImg.setOutputMarkupId(true);
+        add(blurredImg);
         final Image resultImg = new Image("resultImg", new DynamicImageResource() {
             @Override
             protected byte[] getImageData(Attributes attributes) {
-                return resultBytes.getObject();
+                return edgesBytes.getObject();
             }
         });
         resultImg.setOutputMarkupId(true);
@@ -57,14 +65,20 @@ public class DetectorPage extends PubLayout {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 super.onSubmit(target, form);
                 final FileUpload cameraFile = cameraFilesModel.getObject().stream().findFirst().get();
-                final Mat cameraMat = Highgui.imdecode(new MatOfByte(cameraFile.getBytes()), 0);
+                final Mat cameraMat = Highgui.imdecode(new MatOfByte(cameraFile.getBytes()), Highgui.CV_LOAD_IMAGE_UNCHANGED);
                 final RoadAnalysis analysis = roadAnalyzer.analyze(cameraMat);
-                final MatOfByte edgesBytes = new MatOfByte();
-                Highgui.imencode(".jpg", analysis.edges, edgesBytes);
-                resultBytes.setObject(edgesBytes.toArray());
-                log.info("Edges is {} bytes", resultBytes.getObject().length);
-                Interaction.INFO.info("Edges is %s bytes", resultBytes.getObject().length);
-                target.add(resultImg);
+
+                final MatOfByte blurredBytesMat = new MatOfByte();
+                Highgui.imencode(".jpg", analysis.blurred, blurredBytesMat);
+                blurredBytes.setObject(blurredBytesMat.toArray());
+
+                final MatOfByte edgesBytesMat = new MatOfByte();
+                Highgui.imencode(".jpg", analysis.edges, edgesBytesMat);
+                edgesBytes.setObject(edgesBytesMat.toArray());
+                log.info("Edges is {} bytes", DetectorPage.this.edgesBytes.getObject().length);
+                Interaction.INFO.info("Edges is %s bytes", DetectorPage.this.edgesBytes.getObject().length);
+
+                target.add(blurredImg, resultImg);
             }
         });
         add(form);
