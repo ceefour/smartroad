@@ -9,6 +9,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.soluvas.web.bootstrap.FontAwesome;
+import org.soluvas.web.site.SeoBookmarkableMapper;
 
 /**
  * Created by ceefour on 27/12/14.
@@ -28,7 +29,8 @@ public abstract class PubLayout extends WebPage {
         super.onInitialize();
         add(new Label("title", getTitleModel()));
         add(new MetaTag("metaDescription", new Model<>("description"), getMetaDescriptionModel()));
-        add(new BookmarkablePageLink<>("detectorLink", DetectorPage.class));
+        add(new BookmarkablePageLink<>("detectorLink", DetectorPage.class,
+                new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, SeoBookmarkableMapper.DEFAULT_LOCALE_PREF_ID)));
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.hendyirawan.smartroad;
 
+import com.hendyirawan.smartroad.core.RoadAnalysis;
+import com.hendyirawan.smartroad.core.RoadAnalyzer;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -14,6 +16,7 @@ import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Profile;
 
+import javax.inject.Inject;
 import java.io.File;
 
 @SpringBootApplication(
@@ -38,25 +41,21 @@ public class CliApplication implements CommandLineRunner {
                 .run(args);
     }
 
+    @Inject
+    private RoadAnalyzer roadAnalyzer;
+
     @Override
     public void run(String... args) throws Exception {
         final File inFile = new File("sample/pothole1.jpg");
         final Mat img = Highgui.imread(inFile.getPath());
-        final Mat blurred = new Mat(img.size(), img.type());
+        final RoadAnalysis roadAnalysis = roadAnalyzer.analyze(img);
 
-        Imgproc.blur(img, blurred, new Size(5, 5));
         final File blurFile = new File(System.getProperty("java.io.tmpdir"), "pothole1_blur.jpg");
-        Highgui.imwrite(blurFile.getPath(), blurred);
+        Highgui.imwrite(blurFile.getPath(), roadAnalysis.blurred);
         log.info("Blurred written to {}", blurFile);
 
-        double lowThreshold = 3;
-        double ratio = 3;
-        int kernelSize = 3;
-        final Mat detectedEdges = new Mat();
-        Imgproc.Canny(blurred, detectedEdges, lowThreshold, lowThreshold * ratio, kernelSize, false);
-
         final File edgesFile = new File(System.getProperty("java.io.tmpdir"), "pothole1_edges.jpg");
-        Highgui.imwrite(edgesFile.getPath(), detectedEdges);
-        log.info("Detected edges written to {}", detectedEdges);
+        Highgui.imwrite(edgesFile.getPath(), roadAnalysis.edges);
+        log.info("Detected edges written to {}", edgesFile);
     }
 }
