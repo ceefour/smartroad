@@ -20,7 +20,7 @@ public class DaemonApplication implements CommandLineRunner {
     private static Logger log = LoggerFactory.getLogger(DaemonApplication.class);
 
     static {
-        log.info("Loading OpenCV: {}", Core.NATIVE_LIBRARY_NAME);
+        log.info("Loading OpenCV: {} from {}", Core.NATIVE_LIBRARY_NAME, System.getProperty("java.library.path"));
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 

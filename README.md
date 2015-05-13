@@ -6,6 +6,19 @@ Currently, measurement of road damage levels must be done using manual surveys w
 
 ## Development Setup
 
+### OpenCV
+
+Ubuntu 14.04 / Linux Mint 17:
+
+1. Install `libopencv2.4-jni`:
+
+        sudo aptitude install libopencv2.4-java libopencv2.4-jni
+
+2. Symlink `libopencv_java248.so` :
+
+        sudo mkdir -vp /usr/java/packages/lib/amd64
+        sudo ln -sv /usr/lib/jni/libopencv_java248.so /usr/java/packages/lib/amd64/
+
 ### PostgreSQL
 
 Linux:

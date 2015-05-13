@@ -78,8 +78,13 @@
 			<artifactId>wicket-bootstrap-extensions</artifactId>
 			<version>0.9.8</version>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-spring</artifactId>
+            <version>6.19.0</version>
+        </dependency>
 
-		<dependency>
+        <dependency>
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>
 			<version>1.0-SP4</version>
@@ -293,5 +298,26 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>linux</id>
+			<activation>
+				<os>
+					<family>unix</family>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<!-- sudo aptitude install libopencv2.4-java libopencv2.4-jni -->
+					<groupId>org.opencv</groupId>
+					<artifactId>opencv</artifactId>
+                    <version>2.4.11</version>
+					<scope>system</scope>
+					<systemPath>/usr/share/OpenCV/java/opencv-248.jar</systemPath>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 
 </project>
