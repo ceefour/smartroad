@@ -18,18 +18,24 @@ public class RoadAnalyzer {
 
     private static final Logger log = LoggerFactory.getLogger(RoadAnalyzer.class);
 
+    private int horizonV = 200;
+    private final int stdWidth = 640;
+    private final int stdHeight = 480;
+
     public RoadAnalysis analyze(Mat img) {
         log.info("Analyzing road condition from {}×{}/{} image",
                 img.width(), img.height(), img.channels());
 
         final RoadAnalysis roadAnalysis = new RoadAnalysis();
         roadAnalysis.original = img;
+        final Mat resized = new Mat();
+        Imgproc.resize(img, resized, new Size(stdWidth, stdHeight));
 
 //        final File inFile = new File("sample/pothole1.jpg");
 //        final Mat img = Highgui.imread(inFile.getPath());
         final Mat blurred = new Mat(img.size(), img.type());
 
-        Imgproc.blur(img, blurred, new Size(5, 5));
+        Imgproc.blur(resized, blurred, new Size(5, 5));
 //        final File blurFile = new File(System.getProperty("java.io.tmpdir"), "pothole1_blur.jpg");
 //        Highgui.imwrite(blurFile.getPath(), blurred);
 //        log.info("Blurred written to {}", blurFile);
@@ -44,6 +50,8 @@ public class RoadAnalyzer {
 //        Highgui.imwrite(edgesFile.getPath(), detectedEdges);
 //        log.info("Detected edges written to {}", detectedEdges);
         roadAnalysis.edges = detectedEdges;
+
+        // FIXME: draw horizon line
 
         // http://stackoverflow.com/questions/10262600/how-to-detect-region-of-large-of-white-pixels-using-opencv
         final ArrayList<MatOfPoint> contours = new ArrayList<>();
