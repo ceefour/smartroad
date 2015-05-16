@@ -18,7 +18,7 @@ public class RoadAnalyzer {
 
     private static final Logger log = LoggerFactory.getLogger(RoadAnalyzer.class);
 
-    private int horizonV = 200;
+    private final int horizonV = 90;
     private final int stdWidth = 640;
     private final int stdHeight = 480;
 
@@ -51,7 +51,9 @@ public class RoadAnalyzer {
 //        log.info("Detected edges written to {}", detectedEdges);
         roadAnalysis.edges = detectedEdges;
 
-        // FIXME: draw horizon line
+        // draw horizon line
+        Core.line(blurred, new Point(0, horizonV), new Point(blurred.width(), horizonV),
+                new Scalar(200, 0, 0), 2);
 
         // http://stackoverflow.com/questions/10262600/how-to-detect-region-of-large-of-white-pixels-using-opencv
         final ArrayList<MatOfPoint> contours = new ArrayList<>();
@@ -61,14 +63,24 @@ public class RoadAnalyzer {
         log.info("{} Contours: {}", contours.size(), contours);
         log.info("{} Hierarchy: {}", hierarchy.size(), hierarchy);
         for (int i = 0; i < contours.size(); i++) {
-            final MatOfPoint contour = contours.get(0);
+            final MatOfPoint contour = contours.get(i);
             final double contourArea = Imgproc.contourArea(contour);
-            if (contourArea >= 1.0) {
-                log.info("Contour #{} {} area {}", i, contour, contourArea);
-                //if (contourArea >= 200) {
-                    Imgproc.drawContours(blurred, contours, i, new Scalar(180, 105, 255), // http://www.color-hex.com/color/ff69b4
-                        2);
-                //}
+            if (contourArea >= 5.0) {
+                final boolean belowHorizon = contour.toList().stream().allMatch(it -> it.y >= horizonV);
+                if (belowHorizon) {
+                    log.info("{} Contour #{} {} area {}: {}", belowHorizon ? "BELOW HORIZON" : "above horizon", i, contour.size(), contourArea,
+                            contour.toList().stream().limit(10).toArray());
+                    if (contourArea >= 20.0) {
+                        Imgproc.drawContours(blurred, contours, i, new Scalar(140, 80, 255), // http://www.color-hex.com/color/ff69b4
+                                2);
+                    } else {
+                        Imgproc.drawContours(blurred, contours, i, new Scalar(0, 0, 255), // http://www.color-hex.com/color/ff69b4
+                                1);
+                    }
+                } else {
+                    log.debug("{} Contour #{} {} area {}: {}", belowHorizon ? "BELOW HORIZON" : "above horizon", i, contour.size(), contourArea,
+                            contour.toList().stream().limit(10).toArray());
+                }
             }
         }
 
