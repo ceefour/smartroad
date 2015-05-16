@@ -1,8 +1,10 @@
 package com.hendyirawan.smartroad.core;
 
+import com.google.common.collect.ImmutableList;
 import org.opencv.core.*;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Moments;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -67,18 +69,48 @@ public class RoadAnalyzer {
             final double contourArea = Imgproc.contourArea(contour);
             if (contourArea >= 5.0) {
                 final boolean belowHorizon = contour.toList().stream().allMatch(it -> it.y >= horizonV);
-                if (belowHorizon) {
-                    log.info("{} Contour #{} {} area {}: {}", belowHorizon ? "BELOW HORIZON" : "above horizon", i, contour.size(), contourArea,
-                            contour.toList().stream().limit(10).toArray());
-                    if (contourArea >= 20.0) {
-                        Imgproc.drawContours(blurred, contours, i, new Scalar(140, 80, 255), // http://www.color-hex.com/color/ff69b4
-                                2);
+                final RotatedRect ellipse = Imgproc.fitEllipse(new MatOfPoint2f(contour.toArray()));
+                final double ellipseArea = ellipse.size.area();
+                final boolean ellipseBelowHorizon = ellipse.boundingRect().tl().y >= horizonV;
+                if (belowHorizon && ellipseBelowHorizon) {
+                    if (contourArea >= 20.0 && ellipseArea >= 4000) {
+//                        Point sump = new Point(0, 0);
+//                        for (Point p : contour.toList()) {
+//                            sump.x += p.x;
+//                            sump.y += p.y;
+//                        }
+//                        final Point centerPoint = new Point(sump.x / contour.rows(), sump.y / contour.rows());
+                        // http://stackoverflow.com/a/18945856
+                        final Moments moments = Imgproc.moments(contour);
+                        final Point centerPoint = new Point(
+                                moments.get_m10() / moments.get_m00(),
+                                moments.get_m01() / moments.get_m00());
+                        final MatOfPoint fixedContour;
+                        if (contour.isContinuous()) {
+                            fixedContour = contour;
+                        } else {
+                            fixedContour = new MatOfPoint(contour);
+                            fixedContour.reshape(contour.cols(), contour.rows() + 1);
+                            fixedContour.put(fixedContour.rows(), 1, fixedContour.get(fixedContour.rows() - 1, 1));
+                        }
+                        log.info("Big {} Contour #{} {} area {} center {}: {}",
+                                belowHorizon ? "BELOW HORIZON" : "above horizon", i, contour.size(), contourArea,
+                                centerPoint,
+                                contour.toList().stream().limit(10).toArray());
+//                        Imgproc.drawContours(blurred, contours, i, new Scalar(140, 80, 255), // http://www.color-hex.com/color/ff69b4
+//                                2);
+                        Core.polylines(blurred, ImmutableList.of(fixedContour), false, new Scalar(100, 60, 255), 2);
+                        Core.circle(blurred, centerPoint, 4, new Scalar(255, 0, 0), 2);
+                        log.info("Ellipse area {} {} size {}", ellipseArea, ellipse, ellipse.size);
+                        Core.ellipse(blurred, ellipse, new Scalar(0, 255, 0), 2);
                     } else {
+                        log.debug("Small {} Contour #{} {} area {}: {}", belowHorizon ? "BELOW HORIZON" : "above horizon", i, contour.size(), contourArea,
+                                contour.toList().stream().limit(10).toArray());
                         Imgproc.drawContours(blurred, contours, i, new Scalar(0, 0, 255), // http://www.color-hex.com/color/ff69b4
                                 1);
                     }
                 } else {
-                    log.debug("{} Contour #{} {} area {}: {}", belowHorizon ? "BELOW HORIZON" : "above horizon", i, contour.size(), contourArea,
+                    log.trace("{} Contour #{} {} area {}: {}", belowHorizon ? "BELOW HORIZON" : "above horizon", i, contour.size(), contourArea,
                             contour.toList().stream().limit(10).toArray());
                 }
             }
