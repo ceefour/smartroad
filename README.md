@@ -10,14 +10,16 @@ Currently, measurement of road damage levels must be done using manual surveys w
 
 Ubuntu 14.04 / Linux Mint 17:
 
-1. Install `libopencv2.4-jni`:
+1. Install `libopencv2.4-jni` (works on Power too):
 
         sudo aptitude install libopencv2.4-java libopencv2.4-jni
 
-2. Symlink `libopencv_java248.so` :
+2. Symlink `libopencv_java248.so`.
+    For `x64`, while you can put it in `/usr/java/packages/lib/amd64` it's still easier and portable to just use `/usr/lib`.
+    For `ppc64el`, `opencv_java248` will be looked from
+    `/opt/ibm/java-ppc64le-80/jre/lib/ppc64le/compressedrefs:/opt/ibm/java-ppc64le-80/jre/lib/ppc64le:/usr/lib`
 
-        sudo mkdir -vp /usr/java/packages/lib/amd64
-        sudo ln -sv /usr/lib/jni/libopencv_java248.so /usr/java/packages/lib/amd64/
+        sudo ln -sv /usr/lib/jni/libopencv_java248.so /usr/lib
 
 ### PostgreSQL
 
