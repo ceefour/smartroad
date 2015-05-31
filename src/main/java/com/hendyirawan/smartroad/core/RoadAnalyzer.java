@@ -20,7 +20,7 @@ public class RoadAnalyzer {
 
     private static final Logger log = LoggerFactory.getLogger(RoadAnalyzer.class);
 
-    private final int horizonV = 90;
+    private final int horizonV = 140;
     private final int stdWidth = 640;
     private final int stdHeight = 480;
 
@@ -67,7 +67,7 @@ public class RoadAnalyzer {
         for (int i = 0; i < contours.size(); i++) {
             final MatOfPoint contour = contours.get(i);
             final double contourArea = Imgproc.contourArea(contour);
-            if (contourArea >= 5.0) {
+            if (contourArea >= 5.0 && contour.toList().size() >= 5) { // fitEllipse must have >= 5 points
                 final boolean belowHorizon = contour.toList().stream().allMatch(it -> it.y >= horizonV);
                 final RotatedRect ellipse = Imgproc.fitEllipse(new MatOfPoint2f(contour.toArray()));
                 final double ellipseArea = ellipse.size.area();
@@ -81,10 +81,7 @@ public class RoadAnalyzer {
 //                        }
 //                        final Point centerPoint = new Point(sump.x / contour.rows(), sump.y / contour.rows());
                         // http://stackoverflow.com/a/18945856
-                        final Moments moments = Imgproc.moments(contour);
-                        final Point centerPoint = new Point(
-                                moments.get_m10() / moments.get_m00(),
-                                moments.get_m01() / moments.get_m00());
+                        final Point centerPoint = getCenterPoint(contour);
                         final MatOfPoint fixedContour;
                         if (contour.isContinuous()) {
                             fixedContour = contour;
@@ -104,10 +101,24 @@ public class RoadAnalyzer {
                         log.info("Ellipse area {} {} size {}", ellipseArea, ellipse, ellipse.size);
                         Core.ellipse(blurred, ellipse, new Scalar(0, 255, 0), 2);
                     } else {
-                        log.debug("Small {} Contour #{} {} area {}: {}", belowHorizon ? "BELOW HORIZON" : "above horizon", i, contour.size(), contourArea,
+                        // Draw small contours without any ellipse
+                        log.debug("Small {} Contour #{} {} area {}: {}", belowHorizon ? "BELOW HORIZON" : "above horizon",
+                                i, contour.size(), contourArea,
                                 contour.toList().stream().limit(10).toArray());
-                        Imgproc.drawContours(blurred, contours, i, new Scalar(0, 0, 255), // http://www.color-hex.com/color/ff69b4
-                                1);
+                        // If possible, differentiate between start-middle-end of contour lines
+                        if (contour.rows() >= 4) {
+                            Core.polylines(blurred, ImmutableList.of(new MatOfPoint(contour.rowRange(0, 2))),
+                                    false, new Scalar(0, 255, 255), 1);
+                            Core.polylines(blurred, ImmutableList.of(new MatOfPoint(contour.rowRange(2, contour.rows() - 2))),
+                                    false, new Scalar(0, 0, 255), 1);
+                            Core.polylines(blurred, ImmutableList.of(new MatOfPoint(contour.rowRange(contour.rows() - 2, contour.rows()))),
+                                    false, new Scalar(255, 0, 0), 1);
+                        } else {
+                            Core.polylines(blurred, ImmutableList.of(contour),
+                                    false, new Scalar(0, 255, 255), 1);
+                        }
+//                        Imgproc.drawContours(blurred, contours, i, new Scalar(0, 0, 255), // http://www.color-hex.com/color/ff69b4
+//                                1);
                     }
                 } else {
                     log.trace("{} Contour #{} {} area {}: {}", belowHorizon ? "BELOW HORIZON" : "above horizon", i, contour.size(), contourArea,
@@ -116,9 +127,35 @@ public class RoadAnalyzer {
             }
         }
 
+        // CLUSTERING PROBLEM: We want to detect closely located clusters of small contours
+        /* FIXME: why cfree crash?? :((((
+        final MatOfPoint2f contourCenters = new MatOfPoint2f(
+                contours.stream().map(it -> getCenterPoint(it)).toArray(Point[]::new)
+        );
+        log.info("Contour centers: {}", contourCenters);
+        final Mat bestLabels = new Mat();
+        final Mat clusterCenters = new Mat();
+        final int clusterCount = 15;
+        final int attempts = 5;
+        Core.kmeans(contourCenters, clusterCount, bestLabels,
+                new TermCriteria(TermCriteria.COUNT | TermCriteria.EPS, 10000, 3.0), attempts,
+                Core.KMEANS_RANDOM_CENTERS );//, clusterCenters);
+        log.info("Best labels: {}", bestLabels);
+//        log.info("Cluster centers: {}", clusterCenters);
+*/
+
         log.info("Blurred: {}×{}/{} {}", blurred.width(), blurred.height(), blurred.channels(), blurred);
         roadAnalysis.blurred = blurred;
         return roadAnalysis;
+    }
+
+    protected Point getCenterPoint(MatOfPoint contour) {
+        Point centerPoint;
+        final Moments moments = Imgproc.moments(contour);
+        centerPoint = new Point(
+                moments.get_m10() / moments.get_m00(),
+                moments.get_m01() / moments.get_m00());
+        return centerPoint;
     }
 
 }

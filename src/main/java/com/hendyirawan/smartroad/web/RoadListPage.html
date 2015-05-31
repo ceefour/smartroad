@@ -1,0 +1,78 @@
+<wicket:extend>
+<div class="about" itemscope itemtype="http://schema.org/ImageGallery">
+    <nav>
+        <ol class="breadcrumb" itemscope itemprop="breadcrumb">
+            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a href="/" itemprop="url"><span itemprop="title">Beranda</span></a>
+            </li>
+            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a href="/id/indonesia" itemprop="url"><span itemprop="title">Indonesia</span></a>
+            </li>
+            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a href="/id/jawa-barat" itemprop="url"><span itemprop="title">Jawa Barat</span></a>
+            </li>
+            <li>
+                <span>Bandung</span>
+            </li>
+        </ol>
+    </nav>
+    <div class="about" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/City">
+<!--
+        <div class="about-head" style="padding: 0 9em 0 9em">
+            <h3>Bandung</h3>
+            <h4>Jawa Barat, Indonesia &middot; Paris van Java/Kota Kembang</h4>
+        </div>
+-->
+        <div class="container">
+            <div class="about-section">
+                <div class="col-md-8 about-top">
+                    <h3>Ir. H. Juanda</h3>
+                    <h4>Bandung &middot; Jawa Barat, Indonesia</h4>
+
+                    <p><button class="btn btn-default" wicket:id="exportExcel">Export to Excel</button>
+                        <button class="btn btn-default">Post to Twitter</button></p>
+
+                    <strong style="color: red">Kerusakan: POTHOLES (BERLOBANG)</strong>
+
+                    <p>Penurunan berbentuk cekungan dari permukaan perkerasan sampai seluruh lapisan hotmix sampai ke base coursenya,umumnya mempunyai sisi yg tajam dan vertikal dekat sisi dari lobang, lobang biasa terjadi pada jalan yg
+                        mempunyai hotmix yg tipis 25 sampai 50 mm dan jarang terjadi pada jalan hot mix yg tebal 100 mm.</p>
+
+                    <p style="background-color: yellow; color: maroon; padding: 10px"><strong>Level: MEDIUM</strong></p>
+                        <p>Panjang: 7.89 cm</p>
+                    <p>Lebar: 5.22 cm</p>
+                    <p>Kedalaman: 3.4 cm</p>
+                    <p>Volume: 25.3 cm^3</p>
+
+                    <p><img src="/map1.png" width="450"/></p>
+                    <!--<ul>
+                       <li wicket:id="places">
+                           <a wicket:id="link" href="|/${localePrefId}/${placeSlugs[place.id]}|">Baso Enggal Malang</a>
+                       </li>
+                    </ul>
+
+                    <ul class="pagination" wicket:id="navigator"></ul>
+
+                    <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
+                        <p>Peta:</p>
+                        <iframe wicket:id="map" width="600" height="450" frameborder="0" style="border:0; max-width: 100%"
+                                src="https://www.google.com/maps/embed/v1/place?q=Bandung%2C%20Jawa%20Barat%2C%20Indonesia&key=something"></iframe>
+                    </div>-->
+                </div>
+                <div class="col-md-4  about-bottom">
+                    <!--<h3>More info</h3>-->
+                    <p><img src="/pothole1.jpg" width="300"/></p>
+                    <p><img src="/pothole1_edges2.png" width="300"/></p>
+
+                    <p><strong>Masalah yg timbul:</strong> roughness, infiltrasi air pada perkerasan</p>
+                    <p><strong>Penyebab yg mungkin:</strong> umumnya, lobang merupakan hasil dari retak buaya, lalu berlanjut akibat lalu lintas terlepasnya bagian retak menjadi lobang.</p>
+
+                    <p><strong>Perbaikan:</strong> dengan penambalan.</p>
+
+                    <div class="clearfix"> </div>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>
+    </div>
+</div>
+</wicket:extend>
