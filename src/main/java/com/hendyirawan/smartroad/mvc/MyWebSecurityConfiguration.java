@@ -1,6 +1,7 @@
 package com.hendyirawan.smartroad.mvc;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  *
  */
 @Configuration
+@Profile("daemon")
 @EnableWebSecurity
 public class MyWebSecurityConfiguration extends
 		WebSecurityConfigurerAdapter {

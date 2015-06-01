@@ -47,7 +47,7 @@ public class CliApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         final File inFile = new File("sample/pothole1.jpg");
-        final Mat img = Highgui.imread(inFile.getPath());
+        final Mat img = Highgui.imread(inFile.getPath(), Highgui.CV_LOAD_IMAGE_COLOR);
         final RoadAnalysis roadAnalysis = roadAnalyzer.analyze(img);
 
         final File blurFile = new File(System.getProperty("java.io.tmpdir"), "pothole1_blur.jpg");
