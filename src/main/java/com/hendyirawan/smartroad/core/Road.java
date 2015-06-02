@@ -9,7 +9,13 @@ import java.io.Serializable;
  * Created by ceefour on 29/04/2015.
  */
 @Entity
-@Table(schema = "smartroad")
+@Table(schema = "smartroad", indexes = {
+        @Index(columnList = "creationTime"),
+        @Index(columnList = "modificationTime"),
+        @Index(columnList = "name"),
+        @Index(columnList = "width"),
+        @Index(columnList = "length")
+})
 public class Road implements Serializable {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +24,7 @@ public class Road implements Serializable {
     @Column(columnDefinition = "text")
     private String description;
     private Double width;
+    private Double length;
     private Double startLat;
     private Double startLon;
     private Double startEle;
@@ -57,6 +64,19 @@ public class Road implements Serializable {
 
     public void setWidth(Double width) {
         this.width = width;
+    }
+
+    /**
+     * Total length of road, in {@link javax.measure.unit.SI#METER}s.
+     * This is usually calculated, i.e. by {@link com.hendyirawan.smartroad.web.RoadModifyPage}.
+     * @return
+     */
+    public Double getLength() {
+        return length;
+    }
+
+    public void setLength(Double length) {
+        this.length = length;
     }
 
     public Double getStartLat() {

@@ -3,34 +3,18 @@ package com.hendyirawan.smartroad.web;
 import com.hendyirawan.smartroad.core.Road;
 import com.hendyirawan.smartroad.core.RoadRepository;
 import com.opencsv.CSVWriter;
-import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.attributes.AjaxCallListener;
-import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.core.util.string.JavaScriptUtils;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.DownloadLink;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.panel.EmptyPanel;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.soluvas.web.site.Interaction;
-import org.soluvas.web.site.SeoBookmarkableMapper;
-import org.soluvas.web.site.widget.MeasureLabel;
 import org.springframework.core.env.Environment;
 import org.wicketstuff.annotation.mount.MountPath;
-import org.wicketstuff.gmap.GMap;
-import org.wicketstuff.gmap.api.GLatLng;
-import org.wicketstuff.gmap.api.GPolyline;
 
 import javax.inject.Inject;
-import javax.measure.unit.SI;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -38,10 +22,10 @@ import java.io.IOException;
 /**
  * Created by ceefour on 28/12/14.
  */
-@MountPath("/${localePrefId}/roads/${roadId}")
-public class RoadShowPage extends PubLayout {
+@MountPath("/${localePrefId}/roads_mock/${roadId}")
+public class RoadShowMockPage extends PubLayout {
 
-    private static final Logger log = LoggerFactory.getLogger(RoadShowPage.class);
+    private static final Logger log = LoggerFactory.getLogger(RoadShowMockPage.class);
 
     @Inject
     private RoadRepository roadRepo;
@@ -50,19 +34,15 @@ public class RoadShowPage extends PubLayout {
 
     private IModel<Road> model;
 
-    public RoadShowPage(PageParameters parameters) {
+    public RoadShowMockPage(PageParameters parameters) {
         super(parameters);
         final long roadId = parameters.get("roadId").toLong();
-        final Road road = roadRepo.findOne(roadId);
+        final Road road = new Road();
+        road.setName("Jl. Ir. H. Juanda");
         model = new Model<>(road);
         setDefaultModel(model);
 
-        final Form<Road> form = new Form<>("form", model);
-        form.add(new Label("heading", new PropertyModel<>(model, "name")));
-        form.add(new BookmarkablePageLink<>("editLink", RoadModifyPage.class,
-                new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)
-                        .set("roadId", roadId)));
-        form.add(new DownloadLink("exportExcel", new AbstractReadOnlyModel<File>() {
+        add(new DownloadLink("exportExcel", new AbstractReadOnlyModel<File>() {
             @Override
             public File getObject() {
                 try {
@@ -80,7 +60,7 @@ mempunyai hotmix yg tipis 25 sampai 50 mm dan jarang terjadi pada jalan hot mix 
 <p><strong>Perbaikan:</strong> dengan penambalan.</p>
 
                              */
-                            csv.writeNext(new String[]{
+                            csv.writeNext(new String[] {
                                     "roadId", "name", "lat", "lon", "ele", "damage",
                                     "damageDescription",
                                     "problems",
@@ -88,7 +68,7 @@ mempunyai hotmix yg tipis 25 sampai 50 mm dan jarang terjadi pada jalan hot mix 
                                     "repair",
                                     "damageLevel",
                                     "damageLength", "damageWidth", "damageDepth", "damageVolume"});
-                            csv.writeNext(new String[]{
+                            csv.writeNext(new String[] {
                                     "1", "Jl. Ir. H. Juanda", "-6.3453469", "169.234873", "450",
                                     "POTHOLES (BERLOBANG)",
                                     "Penurunan berbentuk cekungan dari permukaan perkerasan sampai seluruh lapisan hotmix sampai ke base coursenya,umumnya mempunyai sisi yg tajam dan vertikal dekat sisi dari lobang, lobang biasa terjadi pada jalan yg\n" +
@@ -107,64 +87,6 @@ mempunyai hotmix yg tipis 25 sampai 50 mm dan jarang terjadi pada jalan hot mix 
                 }
             }
         }));
-        form.add(new AjaxButton("trashBtn") {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                super.onSubmit(target, form);
-                final Road road = model.getObject();
-                roadRepo.delete(roadId);
-                Interaction.DELETED.info("Road '%s' deleted.", road.getName());
-                setResponsePage(RoadListPage.class,
-                        new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER,
-                                getPageParameters().get(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER).toString()));
-            }
-
-            @Override
-            protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
-                super.updateAjaxAttributes(attributes);
-                attributes.getAjaxCallListeners().add(new AjaxCallListener() {
-                    @Override
-                    public CharSequence getPrecondition(Component component) {
-                        final Road road = model.getObject();
-                        return "return confirm(\"Delete road '" + JavaScriptUtils.escapeQuotes(road.getName()) + "?\");";
-                    }
-                });
-            }
-        });
-
-        final Double startLat = new PropertyModel<Double>(model, "startLat").getObject();
-        final Double startLon = new PropertyModel<Double>(model, "startLon").getObject();
-        final Double finishLat = new PropertyModel<Double>(model, "finishLat").getObject();
-        final Double finishLon = new PropertyModel<Double>(model, "finishLon").getObject();
-        if (startLat != null && startLon != null && finishLat != null && finishLon != null) {
-            final GMap gmap = new GMap("map");
-            gmap.setPanControlEnabled(false);
-            gmap.setScaleControlEnabled(false);
-            gmap.setScrollWheelZoomEnabled(false);
-            gmap.setZoomControlEnabled(false);
-            gmap.setMapTypeControlEnabled(false);
-            gmap.setDraggingEnabled(false);
-            gmap.setDoubleClickZoomEnabled(false);
-            final GLatLng startLatLng = new GLatLng(startLat, startLon);
-            final GLatLng finishLatLng = new GLatLng(finishLat, finishLon);
-            gmap.setCenter(startLatLng);
-            gmap.setZoom(15);
-
-            gmap.addOverlay(new GPolyline("red", 6, 0.8f, startLatLng, finishLatLng));
-            form.add(gmap);
-
-            form.add(new MeasureLabel("widthLabel", new Model<>(SI.METER), new PropertyModel<>(model, "width")));
-            form.add(new MeasureLabel("startEleLabel", new Model<>(SI.METER), new PropertyModel<>(model, "startEle")));
-            form.add(new ExternalLink("geoUri", String.format("geo:%f,%f", startLat, startLon)));
-            form.add(new ExternalLink("gmapsLink", String.format("http://maps.google.com/?q=%f,%f", startLat, startLon)));
-        } else {
-            form.add(new EmptyPanel("widthLabel").setVisible(false));
-            form.add(new EmptyPanel("startEleLabel").setVisible(false));
-            form.add(new EmptyPanel("map").setVisible(false));
-            form.add(new EmptyPanel("geoUri").setVisible(false));
-            form.add(new EmptyPanel("gmapsLink").setVisible(false));
-        }
-        add(form);
     }
 
     @Override

@@ -26,41 +26,27 @@
         <div class="container">
             <div class="about-section">
                 <div class="col-md-8 about-top">
-                    <h3>Ir. H. Juanda</h3>
-                    <h4>Bandung &middot; Jawa Barat, Indonesia</h4>
+                    <form wicket:id="form">
+                        <h3 wicket:id="heading">Ir. H. Juanda</h3>
+                        <!--<h4>Bandung &middot; Jawa Barat, Indonesia</h4>-->
 
-                    <p><button class="btn btn-default" wicket:id="exportExcel">Export to Excel</button>
-                        <button class="btn btn-default">Post to Twitter</button></p>
+                        <p>
+                            <a class="btn btn-default" wicket:id="editLink"><i class="fa fa-edit"></i> Edit</a>
+                            <button class="btn btn-default" wicket:id="exportExcel">Export to Excel</button>
+                            <button class="btn btn-default">Post to Twitter</button>
+                            <button class="btn btn-danger" wicket:id="trashBtn"><i class="fa fa-trash"></i></button>
+                        </p>
 
-                    <strong style="color: red">Kerusakan: POTHOLES (BERLOBANG)</strong>
-
-                    <p>Penurunan berbentuk cekungan dari permukaan perkerasan sampai seluruh lapisan hotmix sampai ke base coursenya,umumnya mempunyai sisi yg tajam dan vertikal dekat sisi dari lobang, lobang biasa terjadi pada jalan yg
-                        mempunyai hotmix yg tipis 25 sampai 50 mm dan jarang terjadi pada jalan hot mix yg tebal 100 mm.</p>
-
-                    <p style="background-color: yellow; color: maroon; padding: 10px"><strong>Level: MEDIUM</strong></p>
-                        <p>Panjang: 7.89 cm</p>
-                    <p>Lebar: 5.22 cm</p>
-                    <p>Kedalaman: 3.4 cm</p>
-                    <p>Volume: 25.3 cm^3</p>
-
-                    <p><img src="/map1.png" width="450"/></p>
-                    <!--<ul>
-                       <li wicket:id="places">
-                           <a wicket:id="link" href="|/${localePrefId}/${placeSlugs[place.id]}|">Baso Enggal Malang</a>
-                       </li>
-                    </ul>
-
-                    <ul class="pagination" wicket:id="navigator"></ul>
-
-                    <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
-                        <p>Peta:</p>
-                        <iframe wicket:id="map" width="600" height="450" frameborder="0" style="border:0; max-width: 100%"
-                                src="https://www.google.com/maps/embed/v1/place?q=Bandung%2C%20Jawa%20Barat%2C%20Indonesia&key=something"></iframe>
-                    </div>-->
+                        <div wicket:id="map" style="width: 100%; height: 15em"></div>
+                        <p>
+                            Width: <wicket:container wicket:id="widthLabel"/> &middot; Elevation: <wicket:container wicket:id="startEleLabel"/>
+                            &middot; <a wicket:id="geoUri">Geo URI</a> &middot; <a wicket:id="gmapsLink" target="_blank">Google Maps</a>
+                        </p>
+                    </form>
                 </div>
-                <div class="col-md-4  about-bottom">
+                <div class="col-md-4 about-bottom">
                     <!--<h3>More info</h3>-->
-                    <p><img src="/pothole1.jpg" width="300"/></p>
+                    <!--<p><img src="/pothole1.jpg" width="300"/></p>
                     <p><img src="/pothole1_edges2.png" width="300"/></p>
 
                     <p><strong>Masalah yg timbul:</strong> roughness, infiltrasi air pada perkerasan</p>
@@ -68,7 +54,7 @@
 
                     <p><strong>Perbaikan:</strong> dengan penambalan.</p>
 
-                    <div class="clearfix"> </div>
+                    <div class="clearfix"> </div>-->
                 </div>
                 <div class="clearfix"> </div>
             </div>

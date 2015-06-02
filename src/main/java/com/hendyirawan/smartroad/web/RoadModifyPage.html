@@ -1,0 +1,109 @@
+<wicket:extend>
+<div class="about" itemscope itemtype="http://schema.org/ImageGallery">
+    <nav>
+        <ol class="breadcrumb" itemscope itemprop="breadcrumb">
+            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a href="/" itemprop="url"><span itemprop="title">Beranda</span></a>
+            </li>
+            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a href="/id/indonesia" itemprop="url"><span itemprop="title">Indonesia</span></a>
+            </li>
+            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a href="/id/jawa-barat" itemprop="url"><span itemprop="title">Jawa Barat</span></a>
+            </li>
+            <li>
+                <span>Bandung</span>
+            </li>
+        </ol>
+    </nav>
+    <div class="about" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/City">
+<!--
+        <div class="about-head" style="padding: 0 9em 0 9em">
+            <h3>Bandung</h3>
+            <h4>Jawa Barat, Indonesia &middot; Paris van Java/Kota Kembang</h4>
+        </div>
+-->
+        <div class="container">
+            <div class="about-section">
+                <h3 wicket:id="heading">Ir. H. Juanda</h3>
+                <!--<h4>Bandung &middot; Jawa Barat, Indonesia</h4>-->
+
+                <form wicket:id="form" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">ID</label>
+                        <div class="col-sm-9">
+                            <wicket:container wicket:id="idFld"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Name</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" wicket:id="nameFld"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Description</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" wicket:id="descriptionFld"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Width</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <input type="number" class="form-control" wicket:id="widthFld"/>
+                                <span class="input-group-addon">m</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <div wicket:id="map" style="height: 25em; margin-top: 1em">[map]</div>
+                        </div>
+                    </div>
+                    <div class="form-group" wicket:id="startDiv">
+                        <label class="col-sm-3 control-label">Start</label>
+                        <div class="col-sm-3">
+                            <input type="number" class="form-control" wicket:id="startLatFld"
+                                   title="Latitude" placeholder="Latitude"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="number" class="form-control" wicket:id="startLonFld"
+                                   title="Longitude" placeholder="Longitude"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="input-group">
+                                <input type="number" class="form-control" wicket:id="startEleFld" title="Elevation" placeholder="Elevation"/>
+                                <span class="input-group-addon">m</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" wicket:id="finishDiv">
+                        <label class="col-sm-3 control-label">Finish</label>
+                        <div class="col-sm-3">
+                            <input type="number" class="form-control" wicket:id="finishLatFld"
+                                   title="Latitude" placeholder="Latitude"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="number" class="form-control" wicket:id="finishLonFld"
+                                   title="Longitude" placeholder="Longitude"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="input-group">
+                                <input type="number" class="form-control" wicket:id="finishEleFld" title="Elevation" placeholder="Elevation"/>
+                                <span class="input-group-addon">m</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="col-sm-9">
+                            <button wicket:id="saveBtn" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</wicket:extend>

@@ -1,28 +1,35 @@
 package com.hendyirawan.smartroad.web;
 
+import com.google.common.collect.ImmutableList;
 import com.hendyirawan.smartroad.core.Road;
 import com.hendyirawan.smartroad.core.RoadRepository;
-import com.opencsv.CSVWriter;
-import org.apache.wicket.markup.html.link.DownloadLink;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
+import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.soluvas.web.site.SeoBookmarkableMapper;
+import org.soluvas.web.site.widget.LineMapColumn;
+import org.soluvas.web.site.widget.LinkColumn;
+import org.soluvas.web.site.widget.MeasureColumn;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.inject.Inject;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.measure.unit.SI;
+import java.util.Iterator;
 
 /**
  * Created by ceefour on 28/12/14.
  */
-@MountPath("/${localePrefId}/roads/${roadId}")
+@MountPath("/${localePrefId}/roads")
 public class RoadListPage extends PubLayout {
 
     private static final Logger log = LoggerFactory.getLogger(RoadListPage.class);
@@ -36,67 +43,60 @@ public class RoadListPage extends PubLayout {
 
     public RoadListPage(PageParameters parameters) {
         super(parameters);
-        final long roadId = parameters.get("roadId").toLong();
-        final Road road = new Road();
-        road.setName("Jl. Ir. H. Juanda");
-        model = new Model<>(road);
-        setDefaultModel(model);
-
-        add(new DownloadLink("exportExcel", new AbstractReadOnlyModel<File>() {
-            @Override
-            public File getObject() {
-                try {
-                    final File file = File.createTempFile("road", ".csv");
-                    try (final FileWriter fileWriter = new FileWriter(file)) {
-                        try (final CSVWriter csv = new CSVWriter(fileWriter)) {
-                            /*
-<strong style="color: red">Kerusakan: POTHOLES (BERLOBANG)</strong>
-
-<p>Penurunan berbentuk cekungan dari permukaan perkerasan sampai seluruh lapisan hotmix sampai ke base coursenya,umumnya mempunyai sisi yg tajam dan vertikal dekat sisi dari lobang, lobang biasa terjadi pada jalan yg
-mempunyai hotmix yg tipis 25 sampai 50 mm dan jarang terjadi pada jalan hot mix yg tebal 100 mm.</p>
-<p><strong>Masalah yg timbul:</strong> roughness, infiltrasi air pada perkerasan</p>
-<p><strong>Penyebab yg mungkin:</strong> umumnya, lobang merupakan hasil dari retak buaya, lalu berlanjut akibat lalu lintas terlepasnya bagian retak menjadi lobang.</p>
-
-<p><strong>Perbaikan:</strong> dengan penambalan.</p>
-
-                             */
-                            csv.writeNext(new String[] {
-                                    "roadId", "name", "lat", "lon", "ele", "damage",
-                                    "damageDescription",
-                                    "problems",
-                                    "causes",
-                                    "repair",
-                                    "damageLevel",
-                                    "damageLength", "damageWidth", "damageDepth", "damageVolume"});
-                            csv.writeNext(new String[] {
-                                    "1", "Jl. Ir. H. Juanda", "-6.3453469", "169.234873", "450",
-                                    "POTHOLES (BERLOBANG)",
-                                    "Penurunan berbentuk cekungan dari permukaan perkerasan sampai seluruh lapisan hotmix sampai ke base coursenya,umumnya mempunyai sisi yg tajam dan vertikal dekat sisi dari lobang, lobang biasa terjadi pada jalan yg\n" +
-                                            "mempunyai hotmix yg tipis 25 sampai 50 mm dan jarang terjadi pada jalan hot mix yg tebal 100 mm.",
-                                    "roughness, infiltrasi air pada perkerasan",
-                                    "umumnya, lobang merupakan hasil dari retak buaya, lalu berlanjut akibat lalu lintas terlepasnya bagian retak menjadi lobang.",
-                                    "dengan penambalan",
-                                    "MEDIUM",
-                                    "7.89 cm", "5.22 cm", "3.4 cm", "25.3 cm^3"
-                            });
-                        }
-                    }
-                    return file;
-                } catch (IOException e) {
-                    throw new RuntimeException("Error", e);
-                }
-            }
-        }));
+        add(new BookmarkablePageLink<>("addLink", RoadModifyPage.class,
+                new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, parameters.get(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER).toString())));
+        final RoadDataProvider roadDp = new RoadDataProvider();
+        final AjaxFallbackDefaultDataTable<Road, String> table = new AjaxFallbackDefaultDataTable<>("table", ImmutableList.of(
+                new PropertyColumn<>(new Model<>("ID"), "id", "id"),
+                new LinkColumn<>(new Model<>("Name"), "name", "name",
+                        RoadShowPage.class,
+                        new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId),
+                        "roadId", "id"),
+                new PropertyColumn<>(new Model<>("Description"), "description"),
+//                new MeasureColumn<>(new Model<>("Length"), SI.METER, "length"), // // TODO: incompatible class :( see https://github.com/opengeospatial/geoapi/issues/8
+                new MeasureColumn<>(new Model<>("Width"), SI.METER, "width"),
+                new LineMapColumn<>(new Model<>("Map"), "startLat", "startLon", "finishLat", "finishLon")
+            ), roadDp, roadDp.itemsPerPage);
+        add(table);
+        //add(new BootstrapPagingNavigator("navigator", roadDp));
     }
 
     @Override
     public IModel<String> getTitleModel() {
-        return new PropertyModel<>(getDefaultModel(), "name");
+        return new Model<>("Roads");
     }
 
     @Override
     public IModel<String> getMetaDescriptionModel() {
-        return new PropertyModel<>(getDefaultModel(), "description");
+        return new Model<>("Roads");
+    }
+
+    private class RoadDataProvider extends SortableDataProvider<Road, String> {
+        protected int itemsPerPage = 10;
+
+        @Override
+        public Iterator<? extends Road> iterator(long first, long count) {
+            final Sort sort;
+            if (getSort() != null) {
+                sort = new Sort(getSort().isAscending() ? Sort.Direction.ASC : Sort.Direction.DESC,
+                        getSort().getProperty());
+            } else {
+                sort = new Sort("name");
+            }
+            final Page<Road> roads = roadRepo.findAll(
+                    new PageRequest((int) (first / itemsPerPage), itemsPerPage, sort));
+            return roads.iterator();
+        }
+
+        @Override
+        public long size() {
+            return roadRepo.count();
+        }
+
+        @Override
+        public IModel<Road> model(Road object) {
+            return new Model<>(object);
+        }
     }
 
 /*
