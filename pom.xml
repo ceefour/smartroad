@@ -47,6 +47,12 @@
 			<version>1.4.01</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.12</version>
+		</dependency>
+
 		<!--<dependency>
                     <groupId>com.lowagie</groupId>
                     <artifactId>itext</artifactId>-->

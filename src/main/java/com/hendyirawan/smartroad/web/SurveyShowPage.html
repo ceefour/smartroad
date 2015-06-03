@@ -33,15 +33,20 @@
 
                         <p>
                             <a class="btn btn-default" wicket:id="editLink"><i class="fa fa-edit"></i></a>
+                            <button class="btn btn-primary" wicket:id="analyzeBtn"><i class="fa fa-gears"></i> Analyze</button>
                             <button class="btn btn-danger" wicket:id="trashBtn"><i class="fa fa-trash"></i></button>
                         </p>
 
-                        <p>
-                            <img wicket:id="photoImg" />
-                        </p>
+                        <p><img wicket:id="photoImg" /></p>
+                        <p><img wicket:id="augmentedImg" /></p>
+                        <p><img wicket:id="blurredImg" /></p>
+                        <p><img wicket:id="resultImg" /></p>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4" wicket:id="infoDiv">
                         <p>Damage: <wicket:container wicket:id="damageKind"/></p>
+                        <p>Pothole Width: <wicket:container wicket:id="potholeWidth"/></p>
+                        <p>Pothole Length: <wicket:container wicket:id="potholeLength"/></p>
+                        <p>Pothole Depth: <wicket:container wicket:id="potholeDepth"/></p>
                         <p>Pothole Area: <wicket:container wicket:id="potholeArea"/></p>
 
                         <!--<h3>More info</h3>-->

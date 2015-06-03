@@ -42,6 +42,9 @@ public class Survey implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private RoadDamageKind damageKind;
+    private Double potholeWidth;
+    private Double potholeLength;
+    private Double potholeDepth;
     private Double potholeArea;
 
     public Long getId() {
@@ -125,7 +128,43 @@ public class Survey implements Serializable {
     }
 
     /**
-     * If exists, pothole area, in {@link javax.measure.unit.SI#MILLIMETER}.
+     * If exists, pothole width ACROSS the road, in {@link javax.measure.unit.SI#MILLIMETER}.
+     * @return
+     */
+    public Double getPotholeWidth() {
+        return potholeWidth;
+    }
+
+    public void setPotholeWidth(Double potholeWidth) {
+        this.potholeWidth = potholeWidth;
+    }
+
+    /**
+     * If exists, pothole length ALONG the road, in {@link javax.measure.unit.SI#MILLIMETER}.
+     * @return
+     */
+    public Double getPotholeLength() {
+        return potholeLength;
+    }
+
+    public void setPotholeLength(Double potholeLength) {
+        this.potholeLength = potholeLength;
+    }
+
+    /**
+     * If exists, pothole depth, in {@link javax.measure.unit.SI#MILLIMETER}.
+     * @return
+     */
+    public Double getPotholeDepth() {
+        return potholeDepth;
+    }
+
+    public void setPotholeDepth(Double potholeDepth) {
+        this.potholeDepth = potholeDepth;
+    }
+
+    /**
+     * If exists, pothole area, in square {@link javax.measure.unit.SI#MILLIMETER}.
      * @return
      */
     public Double getPotholeArea() {

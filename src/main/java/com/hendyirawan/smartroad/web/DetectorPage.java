@@ -33,6 +33,7 @@ public class DetectorPage extends PubLayout {
 
     private IModel<byte[]> blurredBytes = new Model<>();
     private IModel<byte[]> edgesBytes = new Model<>();
+    private IModel<byte[]> augmentedBytes = new Model<>();
 
     @Inject
     private RoadAnalyzer roadAnalyzer;
@@ -41,6 +42,14 @@ public class DetectorPage extends PubLayout {
         super(parameters);
         final ListModel<FileUpload> cameraFilesModel = new ListModel<>();
 
+        final Image augmentedImg = new Image("augmentedImg", new DynamicImageResource() {
+            @Override
+            protected byte[] getImageData(Attributes attributes) {
+                return augmentedBytes.getObject();
+            }
+        });
+        augmentedImg.setOutputMarkupId(true);
+        add(augmentedImg);
         final Image blurredImg = new Image("blurredImg", new DynamicImageResource() {
             @Override
             protected byte[] getImageData(Attributes attributes) {
@@ -66,7 +75,7 @@ public class DetectorPage extends PubLayout {
                 super.onSubmit(target, form);
                 final FileUpload cameraFile = cameraFilesModel.getObject().stream().findFirst().get();
                 final Mat cameraMat = Highgui.imdecode(new MatOfByte(cameraFile.getBytes()), Highgui.CV_LOAD_IMAGE_COLOR);
-                final RoadAnalysis analysis = roadAnalyzer.analyze(cameraMat);
+                final RoadAnalysis analysis = roadAnalyzer.analyze(cameraMat, 0.13, 0.32, -0.05, 1.7, 3.5);
 
                 final MatOfByte blurredBytesMat = new MatOfByte();
                 Highgui.imencode(".jpg", analysis.blurred, blurredBytesMat);
@@ -78,7 +87,11 @@ public class DetectorPage extends PubLayout {
                 log.info("Edges is {} bytes", DetectorPage.this.edgesBytes.getObject().length);
                 Interaction.INFO.info("Edges is %s bytes", DetectorPage.this.edgesBytes.getObject().length);
 
-                target.add(blurredImg, resultImg);
+                final MatOfByte augmentedBytesMat = new MatOfByte();
+                Highgui.imencode(".jpg", analysis.augmented, augmentedBytesMat);
+                augmentedBytes.setObject(augmentedBytesMat.toArray());
+
+                target.add(augmentedImg, blurredImg, resultImg);
             }
         });
         add(form);
