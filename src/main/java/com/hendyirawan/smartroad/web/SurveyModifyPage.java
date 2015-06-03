@@ -1,6 +1,7 @@
 package com.hendyirawan.smartroad.web;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.hendyirawan.smartroad.core.*;
@@ -87,7 +88,7 @@ public class SurveyModifyPage extends PubLayout {
         final TextField<DateTime> surveyTimeFld = new TextField<DateTime>("surveyTimeFld", new PropertyModel<>(model, "surveyTime"), DateTime.class) {
             @Override
             protected void convertInput() {
-                setConvertedInput(getInput() != null ? new DateTime(getInput()) : null);
+                setConvertedInput(!Strings.isNullOrEmpty(getInput()) ? new DateTime(getInput()) : null);
             }
         };
         surveyTimeFld.setOutputMarkupId(true);

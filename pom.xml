@@ -40,8 +40,14 @@
             <artifactId>tika-parsers</artifactId>
             <version>1.8</version>
         </dependency>
+		<dependency>
+			<!-- required by tika-parsers -->
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
+		</dependency>
 
-        <!--<dependency>
+		<!--<dependency>
                     <groupId>com.lowagie</groupId>
                     <artifactId>itext</artifactId>-->
 			<!-- 2.1.7.js2 not found in maven central? but jasperreports 5.1.0 IS in maven central! -->

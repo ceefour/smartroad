@@ -61,6 +61,7 @@ public class RoadModifyPage extends PubLayout {
         form.add(new TextField<>("nameFld", new PropertyModel<>(model, "name")).setRequired(true));
         form.add(new TextField<>("descriptionFld", new PropertyModel<>(model, "description")));
         final NumberTextField<Double> widthFld = new NumberTextField<>("widthFld", new PropertyModel<>(model, "width"), Double.class);
+        widthFld.setRequired(true);
         widthFld.setMinimum(0d);
         widthFld.setMaximum(20d);
         widthFld.setStep(1d);

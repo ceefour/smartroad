@@ -184,7 +184,7 @@ public class CameraModifyPage extends PubLayout {
         });
         projectionDiv.add(vanishVFld);
         final NumberTextField<Double> leftUFld = new NumberTextField<>("leftUFld", new PropertyModel<>(model, "leftU"), Double.class)
-                .setMinimum(-1d).setMaximum(2d).setStep(0.02);
+                .setMinimum(-3d).setMaximum(4d).setStep(0.02);
         leftUFld.add(new OnChangeThrottledBehavior() {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
@@ -193,7 +193,7 @@ public class CameraModifyPage extends PubLayout {
         });
         projectionDiv.add(leftUFld);
         final NumberTextField<Double> rightUFld = new NumberTextField<>("rightUFld", new PropertyModel<>(model, "rightU"), Double.class)
-                .setMinimum(-1d).setMaximum(2d).setStep(0.02);
+                .setMinimum(-3d).setMaximum(4d).setStep(0.02);
         rightUFld.add(new OnChangeThrottledBehavior() {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
