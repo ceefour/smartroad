@@ -236,7 +236,7 @@ public class RoadAnalyzer {
                     // at V position 1.0, length multiplier is 1 (no change). at V position vanishV, length multiplier is maximum.
                     final double lengthMultiplier = (1d - (((ellipse.center.y / blurred.height()) - vanishV) / relativeRoadLength)) * 3000d + 1d;
                     final double potholeLength = Math.round((float) (ellipse.size.width / blurred.width() * lengthMultiplier));
-                    final double potholeArea = Math.round((float) (Math.PI * potholeWidth * potholeLength));
+                    final double potholeArea = Math.round((float) (Math.PI * (potholeWidth/2d) * (potholeLength/2d)));
                     final double potholeDepth = Math.round((float) (Math.min(potholeWidth, potholeLength) * 0.6));
                     totalPotholeLength += potholeLength;
                     totalPotholeWidth += potholeWidth;
@@ -247,7 +247,7 @@ public class RoadAnalyzer {
             }
         }
 
-        final double totalPotholeArea = Math.round((float) (Math.PI * totalPotholeWidth * totalPotholeLength));
+        final double totalPotholeArea = Math.round((float) (Math.PI * (totalPotholeWidth/2d) * (totalPotholeLength/2d)));
         final double totalPotholeDepth = Math.round((float) (Math.min(totalPotholeWidth, totalPotholeLength) * 0.6));
         log.info("Total Pothole width={}mm length={}mm area={} depth={}. from {} clusters",
                 totalPotholeWidth, totalPotholeLength, totalPotholeArea, totalPotholeDepth,
