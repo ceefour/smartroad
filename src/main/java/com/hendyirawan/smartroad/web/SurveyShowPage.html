@@ -27,45 +27,22 @@
             <div class="about-section">
                 <form wicket:id="form">
                     <div class="col-md-8">
-                        <h2><i class="fa fa-camera"></i>&nbsp;
+                        <h2><i class="fa fa-clipboard"></i>&nbsp;
                             <wicket:container wicket:id="heading">Ir. H. Juanda</wicket:container></h2>
-                        <h3><i class="fa fa-road"></i>&nbsp; <a wicket:id="roadLink">Bandung &middot; Jawa Barat, Indonesia</a></h3>
+                        <h3><i class="fa fa-camera"></i>&nbsp; <a wicket:id="cameraLink">Bandung &middot; Jawa Barat, Indonesia</a></h3>
 
                         <p>
                             <a class="btn btn-default" wicket:id="editLink"><i class="fa fa-edit"></i></a>
                             <button class="btn btn-danger" wicket:id="trashBtn"><i class="fa fa-trash"></i></button>
                         </p>
 
-                        <div wicket:id="map" style="width: 100%; height: 15em"></div>
-
-                        <h3>Surveys</h3>
                         <p>
-                            <a wicket:id="addSurveyLink" class="btn btn-default"><i class="fa fa-plus"></i> Add Survey</a>
+                            <img wicket:id="photoImg" />
                         </p>
-                        <ul class="list-group">
-                            <li wicket:id="surveysDv" class="list-group-item">
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <a wicket:id="link1"><img wicket:id="photo" class="img-responsive"/></a></div>
-                                    <div class="col-sm-9">
-                                        <strong><a wicket:id="link2"><wicket:container wicket:id="surveyTime"/></a></strong>
-                                        &middot; Damage: <wicket:container wicket:id="damageKind"/>
-                                        &middot; Pothole Area: <wicket:container wicket:id="potholeArea"/>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
                     </div>
                     <div class="col-md-4">
-                        <p>
-                            <img wicket:id="calibrationImg" width="320" height="240"/>
-                        </p>
-                        <p>
-                            Vanish: <wicket:container wicket:id="vanishULabel"/>, <wicket:container wicket:id="vanishVLabel"/>
-                            &middot; Left: <wicket:container wicket:id="leftULabel"/>
-                            &middot; Right: <wicket:container wicket:id="rightULabel"/> &middot; Elevation: <wicket:container wicket:id="eleLabel"/>
-                            &middot; <a wicket:id="geoUri">Geo URI</a> &middot; <a wicket:id="gmapsLink" target="_blank">Google Maps</a>
-                        </p>
+                        <p>Damage: <wicket:container wicket:id="damageKind"/></p>
+                        <p>Pothole Area: <wicket:container wicket:id="potholeArea"/></p>
 
                         <!--<h3>More info</h3>-->
                         <!--<p><img src="/pothole1.jpg" width="300"/></p>

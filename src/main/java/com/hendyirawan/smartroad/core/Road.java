@@ -1,5 +1,6 @@
 package com.hendyirawan.smartroad.core;
 
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
@@ -34,7 +35,11 @@ public class Road implements Serializable {
     private Double centerLat;
     private Double centerLon;
     private Double centerEle;
+    @Column(columnDefinition = "timestamp with time zone")
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime creationTime;
+    @Column(columnDefinition = "timestamp with time zone")
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime modificationTime;
 
     public Long getId() {

@@ -1,0 +1,82 @@
+<wicket:extend>
+<div class="about" itemscope itemtype="http://schema.org/ImageGallery">
+    <nav>
+        <ol class="breadcrumb" itemscope itemprop="breadcrumb">
+            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a href="/" itemprop="url"><span itemprop="title">Beranda</span></a>
+            </li>
+            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a href="/id/indonesia" itemprop="url"><span itemprop="title">Indonesia</span></a>
+            </li>
+            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a href="/id/jawa-barat" itemprop="url"><span itemprop="title">Jawa Barat</span></a>
+            </li>
+            <li>
+                <span>Bandung</span>
+            </li>
+        </ol>
+    </nav>
+    <div class="about" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/City">
+<!--
+        <div class="about-head" style="padding: 0 9em 0 9em">
+            <h3>Bandung</h3>
+            <h4>Jawa Barat, Indonesia &middot; Paris van Java/Kota Kembang</h4>
+        </div>
+-->
+        <div class="container">
+            <div class="about-section">
+                <h3 wicket:id="heading">Ir. H. Juanda</h3>
+                <h4><wicket:container wicket:id="cameraLink"/></h4>
+
+                <form wicket:id="form" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">ID</label>
+                        <div class="col-sm-9">
+                            <wicket:container wicket:id="idLabel"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Photo</label>
+                        <div class="col-sm-9">
+                            <img wicket:id="photoImg" class="img-responsive"/>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-sm-offset-3 col-sm-6">
+                            <input type="file" class="form-control" wicket:id="photoFiles"
+                                    accept="image/*"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <button wicket:id="uploadBtn" class="btn btn-default btn-sm">Upload</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Survey Time</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" wicket:id="surveyTimeFld"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Damage</label>
+                        <div class="col-sm-9">
+                            <select wicket:id="damageKind" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Pothole Area</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" wicket:id="potholeAreaFld"/>
+                            <span class="input-group-addon">mm<sup>2</sup></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="col-sm-9">
+                            <button wicket:id="saveBtn" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</wicket:extend>

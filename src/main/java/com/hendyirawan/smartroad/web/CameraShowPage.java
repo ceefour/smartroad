@@ -1,10 +1,9 @@
 package com.hendyirawan.smartroad.web;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
-import com.hendyirawan.smartroad.core.Camera;
-import com.hendyirawan.smartroad.core.CameraRepository;
-import com.hendyirawan.smartroad.core.Road;
+import com.hendyirawan.smartroad.core.*;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
@@ -17,6 +16,8 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
+import org.apache.wicket.datetime.StyleDateConverter;
+import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -25,17 +26,25 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.joda.time.base.AbstractInstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soluvas.web.site.Interaction;
 import org.soluvas.web.site.SeoBookmarkableMapper;
+import org.soluvas.web.site.widget.DateTimeLabel;
+import org.soluvas.web.site.widget.DateTimeLabel2;
 import org.soluvas.web.site.widget.MeasureLabel;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.wicketstuff.annotation.mount.MountPath;
 import org.wicketstuff.gmap.GMap;
 import org.wicketstuff.gmap.api.GLatLng;
@@ -48,8 +57,11 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.measure.quantity.Area;
+import javax.measure.unit.ProductUnit;
 import javax.measure.unit.SI;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Created by ceefour on 28/12/14.
@@ -62,14 +74,45 @@ public class CameraShowPage extends PubLayout {
     @Inject
     private CameraRepository cameraRepo;
     @Inject
+    private SurveyRepository surveyRepo;
+    @Inject
     private Environment env;
 
     private IModel<Camera> model;
 
+    private class SurveyDataProvider extends SortableDataProvider<Survey, String> {
+        protected int itemsPerPage = 10;
+
+        @Override
+        public Iterator<? extends Survey> iterator(long first, long count) {
+            final Sort sort;
+            if (getSort() != null) {
+                sort = new Sort(getSort().isAscending() ? Sort.Direction.ASC : Sort.Direction.DESC,
+                        getSort().getProperty());
+            } else {
+                sort = new Sort(Sort.Direction.DESC, "surveyTime");
+            }
+            final Page<Survey> surveys = surveyRepo.findAllByCameraId(model.getObject().getId(),
+                    new PageRequest((int) (first / itemsPerPage), itemsPerPage, sort));
+            return surveys.iterator();
+        }
+
+        @Override
+        public long size() {
+            return surveyRepo.countByCameraId(model.getObject().getId());
+        }
+
+        @Override
+        public IModel<Survey> model(Survey object) {
+            return new Model<>(object);
+        }
+    }
+
     public CameraShowPage(PageParameters parameters) {
         super(parameters);
         final String cameraId = parameters.get("cameraId").toString();
-        final Camera camera = cameraRepo.findOne(cameraId);
+        final Camera camera = Preconditions.checkNotNull(cameraRepo.findOne(cameraId),
+                "Cannot find camera '%s'", cameraId);
         model = new Model<>(camera);
         setDefaultModel(model);
 
@@ -145,6 +188,32 @@ public class CameraShowPage extends PubLayout {
         form.add(new Label("vanishVLabel", new PropertyModel<>(model, "vanishV")));
         form.add(new Label("leftULabel", new PropertyModel<>(model, "leftU")));
         form.add(new Label("rightULabel", new PropertyModel<>(model, "rightU")));
+
+        form.add(new BookmarkablePageLink<>("addSurveyLink", SurveyModifyPage.class,
+                new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)
+                        .set("cameraId", cameraId)));
+        final SurveyDataProvider surveyDp = new SurveyDataProvider();
+        final DataView<Survey> surveysDv = new DataView<Survey>("surveysDv", surveyDp, surveyDp.itemsPerPage) {
+            @Override
+            protected void populateItem(Item<Survey> item) {
+                final BookmarkablePageLink<SurveyShowPage> link1 = new BookmarkablePageLink<>("link1", SurveyShowPage.class,
+                        new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)
+                                .set("surveyId", item.getModelObject().getId()));
+                link1.add(new Image("photo", new SurveyPhotoImageResource(item.getModel(), 320, 240)));
+                item.add(link1);
+                final BookmarkablePageLink<SurveyShowPage> link2 = new BookmarkablePageLink<>("link2", SurveyShowPage.class,
+                        new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)
+                                .set("surveyId", item.getModelObject().getId()));
+                link2.add(new DateTimeLabel2("surveyTime", new PropertyModel<>(item.getModel(), "surveyTime")));
+                item.add(link2);
+                item.add(new Label("damageKind", new PropertyModel<>(item.getModel(), "damageKind")));
+                item.add(new MeasureLabel("potholeArea",
+                        new Model<>(SI.MILLIMETER.times(SI.MILLIMETER)),
+                        new PropertyModel<>(item.getModel(), "potholeArea")));
+            }
+        };
+        form.add(surveysDv);
+
         add(form);
     }
 

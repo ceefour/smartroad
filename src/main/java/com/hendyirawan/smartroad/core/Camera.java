@@ -5,6 +5,8 @@ import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by ceefour on 6/3/15.
@@ -13,13 +15,18 @@ import java.io.Serializable;
 @Table(schema = "smartroad", indexes = {
         @Index(columnList = "creationTime"),
         @Index(columnList = "modificationTime"),
-        @Index(columnList = "name")
+        @Index(columnList = "name"),
+        @Index(columnList = "road_id")
 })
 public class Camera implements Serializable {
 
     @Id
     private String id;
+    @Column(columnDefinition = "timestamp with time zone")
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime creationTime;
+    @Column(columnDefinition = "timestamp with time zone")
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime modificationTime;
     private String name;
     @Column(columnDefinition = "text")
@@ -39,6 +46,8 @@ public class Camera implements Serializable {
     @Basic(fetch = FetchType.LAZY)
     @Type(type="org.hibernate.type.BinaryType")
     private byte[] calibrationImage;
+    @OneToMany(mappedBy = "camera")
+    private Set<Survey> surveys = new HashSet<>();
 
     public String getId() {
         return id;
@@ -187,5 +196,9 @@ public class Camera implements Serializable {
 
     public void setCalibrationImage(byte[] calibrationImage) {
         this.calibrationImage = calibrationImage;
+    }
+
+    public Set<Survey> getSurveys() {
+        return surveys;
     }
 }
