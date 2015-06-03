@@ -31,6 +31,9 @@ public class Road implements Serializable {
     private Double finishLat;
     private Double finishLon;
     private Double finishEle;
+    private Double centerLat;
+    private Double centerLon;
+    private Double centerEle;
     private DateTime creationTime;
     private DateTime modificationTime;
 
@@ -113,6 +116,30 @@ public class Road implements Serializable {
 
     public void setFinishLon(Double finishLon) {
         this.finishLon = finishLon;
+    }
+
+    public Double getCenterLat() {
+        return centerLat;
+    }
+
+    public void setCenterLat(Double centerLat) {
+        this.centerLat = centerLat;
+    }
+
+    public Double getCenterLon() {
+        return centerLon;
+    }
+
+    public void setCenterLon(Double centerLon) {
+        this.centerLon = centerLon;
+    }
+
+    public Double getCenterEle() {
+        return centerEle;
+    }
+
+    public void setCenterEle(Double centerEle) {
+        this.centerEle = centerEle;
     }
 
     public DateTime getCreationTime() {

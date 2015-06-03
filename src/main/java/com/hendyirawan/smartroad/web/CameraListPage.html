@@ -1,0 +1,48 @@
+<wicket:extend>
+<div class="about" itemscope itemtype="http://schema.org/ImageGallery">
+    <nav>
+        <ol class="breadcrumb" itemscope itemprop="breadcrumb">
+            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a href="/" itemprop="url"><span itemprop="title">Beranda</span></a>
+            </li>
+            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a href="/id/indonesia" itemprop="url"><span itemprop="title">Indonesia</span></a>
+            </li>
+            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a href="/id/jawa-barat" itemprop="url"><span itemprop="title">Jawa Barat</span></a>
+            </li>
+            <li>
+                <span>Bandung</span>
+            </li>
+        </ol>
+    </nav>
+    <div class="about" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/City">
+<!--
+        <div class="about-head" style="padding: 0 9em 0 9em">
+            <h3>Bandung</h3>
+            <h4>Jawa Barat, Indonesia &middot; Paris van Java/Kota Kembang</h4>
+        </div>
+-->
+        <div class="container">
+            <div class="about-section">
+                <!--<div class="col-md-12 about-top">-->
+                    <h3>Cameras</h3>
+                    <!--<h4>Bandung &middot; Jawa Barat, Indonesia</h4>-->
+                    <p>
+                        <a wicket:id="addLink" class="btn btn-default"><i class="fa fa-plus"></i> Add</a>
+                    </p>
+                    <div class="table-responsive">
+                        <table wicket:id="table" class="table table-bordered table-striped"></table>
+                    </div>
+                <!--</div>-->
+                <!--<div class="col-md-4 about-bottom">-->
+                    <!--<h3>More info</h3>-->
+
+                    <!--<div class="clearfix"> </div>
+                </div>
+                <div class="clearfix"> </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+</wicket:extend>

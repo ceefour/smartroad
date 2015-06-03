@@ -25,7 +25,8 @@ public abstract class PubLayout extends WebPage {
 
     public PubLayout(PageParameters parameters) {
         super(parameters);
-        localePrefId = parameters.get(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER).toString();
+        localePrefId = parameters.get(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER)
+                .toString(SeoBookmarkableMapper.DEFAULT_LOCALE_PREF_ID);
     }
 
     @Override
@@ -35,7 +36,11 @@ public abstract class PubLayout extends WebPage {
         add(new Label("title", getTitleModel()));
         add(new MetaTag("metaDescription", new Model<>("description"), getMetaDescriptionModel()));
         add(new BookmarkablePageLink<>("detectorLink", DetectorPage.class,
-                new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, SeoBookmarkableMapper.DEFAULT_LOCALE_PREF_ID)));
+                new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)));
+        add(new BookmarkablePageLink<>("roadsLink", RoadListPage.class,
+                new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)));
+        add(new BookmarkablePageLink<>("camerasLink", CameraListPage.class,
+                new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)));
     }
 
     @Override

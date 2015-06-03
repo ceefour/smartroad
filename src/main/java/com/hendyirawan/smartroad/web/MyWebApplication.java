@@ -10,6 +10,7 @@ import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.soluvas.web.bootstrap.sound.Howler;
 import org.springframework.stereotype.Component;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
 
@@ -37,6 +38,8 @@ public class MyWebApplication extends WebApplication {
                 .useCdnResources(getConfigurationType() == RuntimeConfigurationType.DEPLOYMENT)
                 .setThemeProvider(new SingleThemeProvider(BootswatchTheme.Sandstone));
         Bootstrap.install(this, bootstrapSettings);
+
+        Howler.install(this);
 
         mountPages();
     }

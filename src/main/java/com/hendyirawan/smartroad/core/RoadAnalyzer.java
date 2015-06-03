@@ -23,15 +23,18 @@ public class RoadAnalyzer {
     /**
      * Position (where 0.0 is left and 1.0 is right) of vanishing point of road
      * (it's usually inside image) at the horizon.
+     * @see Camera#getVanishU()
      */
     private final double vanishU = 0.13;
     private final double vanishV = 0.32;
     /**
      * Position (where 0.0 is left and 1.0 is right) of left edge of road (may be off-image) at the bottom edge of image.
+     * @see Camera#getLeftU()
      */
     private final double leftU = -0.05; // V is always 1.0 (bottommost)
     /**
      * Position (where 0.0 is left and 1.0 is right) of right edge of road (may be off-image) at the bottom edge of image.
+     * @see Camera#getRightU()
      */
     private final double rightU = 1.7; // V is always 1.0 (bottommost)
     private final int stdWidth = 640;
