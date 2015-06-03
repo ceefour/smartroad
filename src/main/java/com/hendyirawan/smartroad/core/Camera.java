@@ -1,5 +1,6 @@
 package com.hendyirawan.smartroad.core;
 
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
@@ -32,6 +33,12 @@ public class Camera implements Serializable {
     private Double rightU;
     @ManyToOne
     private Road road;
+    private String calibrationImageType;
+    private Integer calibrationImageWidth;
+    private Integer calibrationImageHeight;
+    @Basic(fetch = FetchType.LAZY)
+    @Type(type="org.hibernate.type.BinaryType")
+    private byte[] calibrationImage;
 
     public String getId() {
         return id;
@@ -148,5 +155,37 @@ public class Camera implements Serializable {
 
     public void setRoad(Road road) {
         this.road = road;
+    }
+
+    public String getCalibrationImageType() {
+        return calibrationImageType;
+    }
+
+    public void setCalibrationImageType(String calibrationImageType) {
+        this.calibrationImageType = calibrationImageType;
+    }
+
+    public Integer getCalibrationImageWidth() {
+        return calibrationImageWidth;
+    }
+
+    public void setCalibrationImageWidth(Integer calibrationImageWidth) {
+        this.calibrationImageWidth = calibrationImageWidth;
+    }
+
+    public Integer getCalibrationImageHeight() {
+        return calibrationImageHeight;
+    }
+
+    public void setCalibrationImageHeight(Integer calibrationImageHeight) {
+        this.calibrationImageHeight = calibrationImageHeight;
+    }
+
+    public byte[] getCalibrationImage() {
+        return calibrationImage;
+    }
+
+    public void setCalibrationImage(byte[] calibrationImage) {
+        this.calibrationImage = calibrationImage;
     }
 }

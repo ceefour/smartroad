@@ -55,7 +55,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Auto-Location</label>
                         <div class="col-sm-6">
-                            <input type="file" class="form-control" wicket:id="calibrationImg"
+                            <input type="file" class="form-control" wicket:id="calibrationFile"
                                     accept="image/*"/>
                         </div>
                         <div class="col-sm-3">
@@ -81,7 +81,10 @@
                     </div>
                     <div class="form-group" wicket:id="projectionDiv">
                         <label class="col-sm-3 control-label">Projection</label>
-                        <div class="col-sm-2">
+                        <div class="col-sm-9">
+                            <img wicket:id="calibrationImg" width="320" height="240"/>
+                        </div>
+                        <div class="col-sm-offset-3 col-sm-2">
                             <input type="number" class="form-control" wicket:id="vanishUFld"
                                    title="Vanish U" placeholder="Vanish U"/>
                         </div>

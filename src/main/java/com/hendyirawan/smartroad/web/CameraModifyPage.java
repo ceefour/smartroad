@@ -2,10 +2,12 @@ package com.hendyirawan.smartroad.web;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.hendyirawan.smartroad.core.Camera;
 import com.hendyirawan.smartroad.core.CameraRepository;
 import org.apache.tika.metadata.Metadata;
+import org.apache.tika.metadata.Property;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.parser.jpeg.JpegParser;
@@ -19,17 +21,23 @@ import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.joda.time.DateTime;
+import org.opencv.core.*;
+import org.opencv.highgui.Highgui;
+import org.opencv.imgproc.Imgproc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soluvas.web.site.Interaction;
+import org.soluvas.web.site.OnChangeThrottledBehavior;
 import org.soluvas.web.site.SeoBookmarkableMapper;
 import org.springframework.core.env.Environment;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -126,23 +134,89 @@ public class CameraModifyPage extends PubLayout {
         final WebMarkupContainer locDiv = new WebMarkupContainer("locDiv");
         locDiv.setOutputMarkupId(true);
         locDiv.add(new NumberTextField<>("latFld", new PropertyModel<>(model, "lat"), Double.class)
-                .setMinimum(-90d).setMaximum(90d).setStep(0.001));
+                .setMinimum(-90d).setMaximum(90d).setStep(0.000000000000001)); // not ideal, but this is W3C spec!
         locDiv.add(new NumberTextField<>("lonFld", new PropertyModel<>(model, "lon"), Double.class)
-                .setMinimum(-180d).setMaximum(180d).setStep(0.001));
+                .setMinimum(-180d).setMaximum(180d).setStep(0.000000000000001));
         locDiv.add(new NumberTextField<>("eleFld", new PropertyModel<>(model, "ele"), Double.class)
                 .setMinimum(-1000d).setMaximum(10000d).setStep(1d));
         form.add(locDiv);
 
+        final ListModel<FileUpload> calibrationModel = new ListModel<>(new ArrayList<>());
+
         final WebMarkupContainer projectionDiv = new WebMarkupContainer("projectionDiv");
         projectionDiv.setOutputMarkupId(true);
-        projectionDiv.add(new NumberTextField<>("vanishUFld", new PropertyModel<>(model, "vanishU"), Double.class)
-                .setMinimum(0d).setMaximum(1d).setStep(0.02));
-        projectionDiv.add(new NumberTextField<>("vanishVFld", new PropertyModel<>(model, "vanishV"), Double.class)
-                .setMinimum(0d).setMaximum(1d).setStep(0.02));
-        projectionDiv.add(new NumberTextField<>("leftUFld", new PropertyModel<>(model, "leftU"), Double.class)
-                .setMinimum(-1d).setMaximum(2d).setStep(0.02));
-        projectionDiv.add(new NumberTextField<>("rightUFld", new PropertyModel<>(model, "rightU"), Double.class)
-                .setMinimum(-1d).setMaximum(2d).setStep(0.02));
+        final Image calibrationImg = new Image("calibrationImg", new DynamicImageResource() {
+            @Override
+            protected byte[] getImageData(Attributes attributes) {
+                if (model.getObject().getCalibrationImage() == null) {
+                    return new byte[] {};
+                }
+                final Mat calibrationMat = Highgui.imdecode(new MatOfByte(model.getObject().getCalibrationImage()),
+                        Highgui.CV_LOAD_IMAGE_COLOR);
+                Imgproc.resize(calibrationMat, calibrationMat, new Size(320, 240));
+
+                final Double vanishU = model.getObject().getVanishU();
+                final Double vanishV = model.getObject().getVanishV();
+                final Double leftU = model.getObject().getLeftU();
+                final Double rightU = model.getObject().getRightU();
+                if (vanishU != null && vanishV != null) {
+                    // draw horizon line
+                    final int vanishY = Math.round((float) (vanishV * calibrationMat.height()));
+                    final Point vanishPoint = new Point(vanishU * calibrationMat.width(), vanishV * calibrationMat.height());
+                    Core.circle(calibrationMat, vanishPoint, 4, new Scalar(255, 0, 0), 2);
+//        Core.line(blurred, new Point(0, vanishY), new Point(blurred.width(), vanishY),
+//                new Scalar(200, 0, 0), 2);
+                    if (leftU != null && rightU != null) {
+                        final Point leftPoint = new Point(leftU * calibrationMat.width(), calibrationMat.height());
+                        final Point rightPoint = new Point(rightU * calibrationMat.width(), calibrationMat.height());
+                        Core.polylines(calibrationMat, ImmutableList.of(new MatOfPoint(vanishPoint, leftPoint, rightPoint, vanishPoint)), false,
+                                new Scalar(255, 0, 0), 2);
+                    }
+                }
+
+                final MatOfByte calibrationBytesMat = new MatOfByte();
+                Highgui.imencode(".jpg", calibrationMat, calibrationBytesMat);
+                return calibrationBytesMat.toArray();
+            }
+        });
+        calibrationImg.setOutputMarkupId(true);
+        projectionDiv.add(calibrationImg);
+        final NumberTextField<Double> vanishUFld = new NumberTextField<>("vanishUFld", new PropertyModel<>(model, "vanishU"), Double.class)
+                .setMinimum(0d).setMaximum(1d).setStep(0.02);
+        vanishUFld.add(new OnChangeThrottledBehavior() {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                target.add(calibrationImg);
+            }
+        });
+        projectionDiv.add(vanishUFld);
+        final NumberTextField<Double> vanishVFld = new NumberTextField<>("vanishVFld", new PropertyModel<>(model, "vanishV"), Double.class)
+                .setMinimum(0d).setMaximum(1d).setStep(0.02);
+        vanishVFld.add(new OnChangeThrottledBehavior() {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                target.add(calibrationImg);
+            }
+        });
+        projectionDiv.add(vanishVFld);
+        final NumberTextField<Double> leftUFld = new NumberTextField<>("leftUFld", new PropertyModel<>(model, "leftU"), Double.class)
+                .setMinimum(-1d).setMaximum(2d).setStep(0.02);
+        leftUFld.add(new OnChangeThrottledBehavior() {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                target.add(calibrationImg);
+            }
+        });
+        projectionDiv.add(leftUFld);
+        final NumberTextField<Double> rightUFld = new NumberTextField<>("rightUFld", new PropertyModel<>(model, "rightU"), Double.class)
+                .setMinimum(-1d).setMaximum(2d).setStep(0.02);
+        rightUFld.add(new OnChangeThrottledBehavior() {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                target.add(calibrationImg);
+            }
+        });
+        projectionDiv.add(rightUFld);
         form.add(projectionDiv);
 
         final GMap gmap = new GMap("map");
@@ -189,8 +263,7 @@ public class CameraModifyPage extends PubLayout {
 //        });
         form.add(gmap);
 
-        final ListModel<FileUpload> calibrationModel = new ListModel<>(new ArrayList<>());
-        final FileUploadField calibrationFld = new FileUploadField("calibrationImg", calibrationModel);
+        final FileUploadField calibrationFld = new FileUploadField("calibrationFile", calibrationModel);
         form.add(calibrationFld);
         form.add(new IndicatingAjaxButton("calibrateBtn") {
              @Override
@@ -220,6 +293,12 @@ public class CameraModifyPage extends PubLayout {
                          gmap.setCenter(latlng);
                          marker.getMarkerOptions().setLatLng(latlng);
                          target.add(locDiv, gmap);
+
+                         model.getObject().setCalibrationImageType(file.getContentType());
+                         model.getObject().setCalibrationImageWidth(metadata.getInt(Metadata.IMAGE_WIDTH));
+                         model.getObject().setCalibrationImageHeight(metadata.getInt(Metadata.IMAGE_LENGTH));
+                         model.getObject().setCalibrationImage(file.getBytes());
+                         target.add(calibrationImg);
                      } catch (Exception e) {
                          Throwables.propagate(e);
                      }

@@ -69,18 +69,18 @@ public class RoadModifyPage extends PubLayout {
         final WebMarkupContainer startDiv = new WebMarkupContainer("startDiv");
         startDiv.setOutputMarkupId(true);
         startDiv.add(new NumberTextField<>("startLatFld", new PropertyModel<>(model, "startLat"), Double.class)
-                .setMinimum(-90d).setMaximum(90d).setStep(0.001));
+                .setMinimum(-90d).setMaximum(90d).setStep(0.000000000000001)); // not ideal, but this is W3C spec!
         startDiv.add(new NumberTextField<>("startLonFld", new PropertyModel<>(model, "startLon"), Double.class)
-                .setMinimum(-180d).setMaximum(180d).setStep(0.001));
+                .setMinimum(-180d).setMaximum(180d).setStep(0.000000000000001)); // not ideal, but this is W3C spec!
         startDiv.add(new NumberTextField<>("startEleFld", new PropertyModel<>(model, "startEle"), Double.class)
                 .setMinimum(-1000d).setMaximum(10000d).setStep(1d));
         form.add(startDiv);
         final WebMarkupContainer finishDiv = new WebMarkupContainer("finishDiv");
         finishDiv.setOutputMarkupId(true);
         finishDiv.add(new NumberTextField<>("finishLatFld", new PropertyModel<>(model, "finishLat"), Double.class)
-                .setMinimum(-90d).setMaximum(90d).setStep(0.001));
+                .setMinimum(-90d).setMaximum(90d).setStep(0.000000000000001)); // not ideal, but this is W3C spec!
         finishDiv.add(new NumberTextField<>("finishLonFld", new PropertyModel<>(model, "finishLon"), Double.class)
-                .setMinimum(-180d).setMaximum(180d).setStep(0.001));
+                .setMinimum(-180d).setMaximum(180d).setStep(0.000000000000001)); // not ideal, but this is W3C spec!
         finishDiv.add(new NumberTextField<>("finishEleFld", new PropertyModel<>(model, "finishEle"), Double.class)
                 .setMinimum(-1000d).setMaximum(10000d).setStep(1d));
         form.add(finishDiv);

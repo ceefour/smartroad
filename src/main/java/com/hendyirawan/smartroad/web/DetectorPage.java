@@ -65,7 +65,7 @@ public class DetectorPage extends PubLayout {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 super.onSubmit(target, form);
                 final FileUpload cameraFile = cameraFilesModel.getObject().stream().findFirst().get();
-                final Mat cameraMat = Highgui.imdecode(new MatOfByte(cameraFile.getBytes()), Highgui.CV_LOAD_IMAGE_UNCHANGED);
+                final Mat cameraMat = Highgui.imdecode(new MatOfByte(cameraFile.getBytes()), Highgui.CV_LOAD_IMAGE_COLOR);
                 final RoadAnalysis analysis = roadAnalyzer.analyze(cameraMat);
 
                 final MatOfByte blurredBytesMat = new MatOfByte();
