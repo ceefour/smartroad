@@ -21,6 +21,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
@@ -110,6 +111,8 @@ public class CameraShowPage extends PubLayout {
                 });
             }
         });
+
+        form.add(new Image("calibrationImg", new CalibrationImageResource(model)));
 
         final Double lat = new PropertyModel<Double>(model, "lat").getObject();
         final Double lon = new PropertyModel<Double>(model, "lon").getObject();

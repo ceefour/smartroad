@@ -47,7 +47,7 @@ public class RoadAnalyzer {
         final RoadAnalysis roadAnalysis = new RoadAnalysis();
         roadAnalysis.original = img;
         final Mat resized = new Mat();
-        Imgproc.resize(img, resized, new Size(stdWidth, stdHeight));
+        Imgproc.resize(img, resized, new Size(stdWidth, stdHeight), 0, 0, Imgproc.INTER_AREA);
 
 //        final File inFile = new File("sample/pothole1.jpg");
 //        final Mat img = Highgui.imread(inFile.getPath());
