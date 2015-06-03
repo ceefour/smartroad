@@ -4,6 +4,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 import com.hendyirawan.smartroad.core.Camera;
 import com.hendyirawan.smartroad.core.CameraRepository;
+import com.hendyirawan.smartroad.core.Road;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
@@ -73,6 +74,15 @@ public class CameraShowPage extends PubLayout {
 
         final Form<Camera> form = new Form<>("form", model);
         form.add(new Label("heading", new PropertyModel<>(model, "name")));
+        if (model.getObject().getRoad() != null) {
+            final Road road = model.getObject().getRoad();
+            form.add(new BookmarkablePageLink<>("roadLink", RoadShowPage.class,
+                    new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)
+                            .set("roadId", road.getId()))
+                .setBody(new Model<>(road.getName())));
+        } else {
+            form.add(new EmptyPanel("roadLink").setVisible(false));
+        }
         form.add(new BookmarkablePageLink<>("editLink", CameraModifyPage.class,
                 new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)
                         .set("cameraId", cameraId)));

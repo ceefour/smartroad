@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.hendyirawan.smartroad.core.Camera;
 import com.hendyirawan.smartroad.core.CameraRepository;
+import com.hendyirawan.smartroad.core.Road;
+import com.hendyirawan.smartroad.core.RoadRepository;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.metadata.Property;
 import org.apache.tika.parser.ParseContext;
@@ -16,16 +18,11 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.NumberTextField;
-import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.*;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.DynamicImageResource;
@@ -40,6 +37,8 @@ import org.soluvas.web.site.Interaction;
 import org.soluvas.web.site.OnChangeThrottledBehavior;
 import org.soluvas.web.site.SeoBookmarkableMapper;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.wicketstuff.annotation.mount.MountPath;
 import org.wicketstuff.gmap.GMap;
 import org.wicketstuff.gmap.api.*;
@@ -49,6 +48,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,6 +61,8 @@ public class CameraModifyPage extends PubLayout {
 
     private static final Logger log = LoggerFactory.getLogger(CameraModifyPage.class);
 
+    @Inject
+    private RoadRepository roadRepo;
     @Inject
     private CameraRepository cameraRepo;
     @Inject
@@ -123,6 +125,28 @@ public class CameraModifyPage extends PubLayout {
         add(new Label("heading", getTitleModel()));
         final Form<Camera> form = new Form<>("form", model);
         form.setOutputMarkupId(true);
+
+        final LoadableDetachableModel<List<Road>> roadsModel = new LoadableDetachableModel<List<Road>>() {
+            @Override
+            protected List<Road> load() {
+                return roadRepo.findAll(new PageRequest(0, 1000, Sort.Direction.ASC, "name")).getContent();
+            }
+        };
+        final DropDownChoice<Road> roadSelect = new DropDownChoice<>("roadSelect", new PropertyModel<>(model, "road"),
+                roadsModel, new ChoiceRenderer<Road>() {
+            @Override
+            public Object getDisplayValue(Road object) {
+                return object.getName();
+            }
+
+            @Override
+            public String getIdValue(Road object, int index) {
+                return object.getId().toString();
+            }
+        });
+        roadSelect.setRequired(true);
+        form.add(roadSelect);
+
         final TextField<String> idFld = new TextField<>("idFld", new PropertyModel<>(model, "id"));
         idFld.add(new PatternValidator(Pattern.compile("[a-z][a-z0-9]*")));
         idFld.setRequired(true);
