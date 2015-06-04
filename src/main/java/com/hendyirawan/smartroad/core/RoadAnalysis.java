@@ -15,6 +15,7 @@ public class RoadAnalysis {
 
     public RoadDamageLevel damageLevel;
     public RoadDamageKind damageKind;
+    public Integer potholeCount;
     @Nullable
     public Double totalPotholeWidth;
     @Nullable

@@ -184,6 +184,7 @@ public class RoadAnalyzer {
         final Mat clusterCenters = new Mat();
         final int clusterCount = Math.min(4, contourCenters.rows());
 
+        int potholeCount = 0;
         double totalPotholeLength = 0d;
         double totalPotholeWidth = 0d;
         final ArrayListMultimap<Integer, Point> clusters = ArrayListMultimap.create();
@@ -214,6 +215,7 @@ public class RoadAnalyzer {
             // calculate area for each big cluster
             for (int cl = 0; cl < clusterCount; cl++) {
                 if (clusterSizes.get(cl) >= bigCluster_minPoints) {
+                    potholeCount++;
                     // approaches: 1. convex hull, 2. fitEllipse (currently chosen), 3. boundingRect
                     // output of fitEllipse. first we get the horizontal length then convert it to pothole length in millimeters.
                     // then we get the vertical length, then approximate the multiplier based on the y vertical position
@@ -261,6 +263,7 @@ public class RoadAnalyzer {
                 roadAnalysis.damageLevel = RoadDamageLevel.HEAVY;
             }
             roadAnalysis.damageKind = RoadDamageKind.POTHOLE;
+            roadAnalysis.potholeCount = potholeCount;
             roadAnalysis.totalPotholeWidth = totalPotholeWidth;
             roadAnalysis.totalPotholeLength = totalPotholeLength;
             roadAnalysis.totalPotholeDepth = totalPotholeDepth;
@@ -268,6 +271,7 @@ public class RoadAnalyzer {
         } else {
             roadAnalysis.damageLevel = RoadDamageLevel.NONE;
             roadAnalysis.damageKind = RoadDamageKind.NONE;
+            roadAnalysis.potholeCount = 0;
         }
 
         log.info("Blurred: {}×{}/{} {}", blurred.width(), blurred.height(), blurred.channels(), blurred);

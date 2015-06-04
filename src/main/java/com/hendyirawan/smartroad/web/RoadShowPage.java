@@ -1,8 +1,14 @@
 package com.hendyirawan.smartroad.web;
 
+import com.google.common.collect.ImmutableList;
+import com.hendyirawan.smartroad.core.Camera;
+import com.hendyirawan.smartroad.core.CameraRepository;
 import com.hendyirawan.smartroad.core.Road;
 import com.hendyirawan.smartroad.core.RoadRepository;
 import com.opencsv.CSVWriter;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
@@ -18,12 +24,18 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.*;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soluvas.web.site.Interaction;
 import org.soluvas.web.site.SeoBookmarkableMapper;
 import org.soluvas.web.site.widget.MeasureLabel;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.wicketstuff.annotation.mount.MountPath;
 import org.wicketstuff.gmap.GMap;
 import org.wicketstuff.gmap.api.GLatLng;
@@ -31,9 +43,10 @@ import org.wicketstuff.gmap.api.GPolyline;
 
 import javax.inject.Inject;
 import javax.measure.unit.SI;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by ceefour on 28/12/14.
@@ -45,6 +58,8 @@ public class RoadShowPage extends PubLayout {
 
     @Inject
     private RoadRepository roadRepo;
+    @Inject
+    private CameraRepository cameraRepo;
     @Inject
     private Environment env;
 
@@ -59,10 +74,112 @@ public class RoadShowPage extends PubLayout {
 
         final Form<Road> form = new Form<>("form", model);
         form.add(new Label("heading", new PropertyModel<>(model, "name")));
+        form.add(new Label("pavement", new PropertyModel<>(model, "pavement")));
         form.add(new BookmarkablePageLink<>("editLink", RoadModifyPage.class,
                 new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)
                         .set("roadId", roadId)));
+
         form.add(new DownloadLink("exportExcel", new AbstractReadOnlyModel<File>() {
+            @Override
+            public File getObject() {
+                try {
+                    final File outFile = File.createTempFile("road", ".xlsx");
+                    final URL inFile = RoadShowPage.class.getResource("/com/hendyirawan/smartroad/road-survey-template.xlsx");
+                    log.info("Reading from '{}'", inFile);
+                    try (final InputStream stream = inFile.openStream()) {
+                        //final POIFSFileSystem fs = new POIFSFileSystem(stream);
+                        try (final XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
+                            final XSSFSheet surveySheet = workbook.getSheetAt(0);
+//                            final XSSFCell titleCell = surveySheet.getRow(0).getCell(0);
+//                            log.info("Title is: {}", titleCell.getStringCellValue());
+                            final Road road = model.getObject();
+                            surveySheet.getRow(2).getCell(9).setCellValue(road.getName());
+                            surveySheet.getRow(5).getCell(9).setCellValue(Objects.toString(road.getPavement()));
+                            final DateTimeFormatter formatter = DateTimeFormat.forStyle("MS");
+                            surveySheet.getRow(6).getCell(15).setCellValue(new DateTime(DateTimeZone.forID("Asia/Jakarta")).toString(formatter));
+
+//                            final List<Camera> cameras = ImmutableList.copyOf(cameraRepo.findAll(new Sort("id")));
+                            final List<Camera> cameras = cameraRepo.findAllByRoadId(roadId, new PageRequest(0, 1000, Sort.Direction.ASC, "id")).getContent();
+                            if (!cameras.isEmpty()) {
+                                surveySheet.getRow(5).getCell(3).setCellValue(cameras.get(0).getDescription());
+                                surveySheet.getRow(6).getCell(3).setCellValue(cameras.get(cameras.size() - 1).getDescription());
+                            }
+                            int sumPotholeCount = 0;
+                            double sumPotholeArea = 0d;
+
+                            for (int cameraIdx = 0; cameraIdx < 9; cameraIdx++) {
+                                final int row = 11 + (cameraIdx * 5);
+                                for (int cell = 0; cell <= 19; cell++) {
+                                    surveySheet.getRow(row).getCell(cell).setCellValue("");
+                                    surveySheet.getRow(row + 1).getCell(cell).setCellValue("");
+                                    surveySheet.getRow(row + 2).getCell(cell).setCellValue("");
+                                    surveySheet.getRow(row + 3).getCell(cell).setCellValue("");
+                                    surveySheet.getRow(row + 4).getCell(cell).setCellValue("");
+                                }
+                            }
+
+                            for (int cameraIdx = 0; cameraIdx < cameras.size(); cameraIdx++) {
+                                final int row = 11 + (cameraIdx * 5);
+                                final Camera camera = cameras.get(cameraIdx);
+                                if (camera.getPotholeCount() != null) {
+                                    sumPotholeCount += camera.getPotholeCount();
+                                }
+                                if (camera.getPotholeArea() != null) {
+                                    sumPotholeArea += camera.getPotholeArea();
+                                }
+                                surveySheet.getRow(row).getCell(0).setCellValue(camera.getDescription());
+                                for (int cell = 1; cell <= 19; cell++) {
+                                    switch (cell) {
+                                        case 2:
+                                            if (camera.getPotholeCount() != null) {
+                                                surveySheet.getRow(row).getCell(cell).setCellValue(camera.getPotholeCount());
+                                            }
+                                            break;
+                                        case 3:
+                                            if (camera.getPotholeArea() != null) {
+                                                surveySheet.getRow(row).getCell(cell).setCellValue(camera.getPotholeArea());
+                                            }
+                                            break;
+                                        case 6:
+                                            if (camera.getDamageKind() != null) {
+                                                surveySheet.getRow(row).getCell(cell).setCellValue(camera.getDamageKind().toString());
+                                            }
+                                            break;
+                                        case 7:
+                                            if (camera.getPotholeLength() != null) {
+                                                surveySheet.getRow(row).getCell(cell).setCellValue(camera.getPotholeLength());
+                                            }
+                                            break;
+                                        case 8:
+                                            if (camera.getPotholeWidth() != null) {
+                                                surveySheet.getRow(row).getCell(cell).setCellValue(camera.getPotholeWidth());
+                                            }
+                                            break;
+                                        case 17:
+                                            if (camera.getPotholeDepth() != null) {
+                                                surveySheet.getRow(row).getCell(cell).setCellValue(camera.getPotholeDepth());
+                                            }
+                                            break;
+                                        default:
+                                    }
+                                }
+                            }
+                            surveySheet.getRow(69).getCell(1).setCellValue(sumPotholeCount);
+                            surveySheet.getRow(70).getCell(1).setCellValue(sumPotholeArea);
+
+//                            final File outFile = new File(System.getProperty("user.home"), "tmp/road-survey-test.xlsx");
+                            log.info("Writing to '{}'", outFile);
+                            workbook.write(new FileOutputStream(outFile));
+                            return outFile;
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException("Error exporting Excel: " + e, e);
+                }
+            }
+        }));
+
+        form.add(new DownloadLink("exportCsv", new AbstractReadOnlyModel<File>() {
             @Override
             public File getObject() {
                 try {
@@ -176,40 +293,5 @@ mempunyai hotmix yg tipis 25 sampai 50 mm dan jarang terjadi pada jalan hot mix 
     public IModel<String> getMetaDescriptionModel() {
         return new PropertyModel<>(getDefaultModel(), "description");
     }
-
-/*
-  val localePrefId = params.get("localePrefId").toString
-  val pageable = new PageRequest(params.get("page").toInt(0), params.get("size").toInt(20))
-//  val placeSlugs = mapAsJavaMap(places.asScala
-//    .map { it: Place => it.getId() -> SlugUtils.generateSegment(it.getName()) }.toMap)
-//  log.debug("placeSlugs={}", placeSlugs)
-  val placeDp = new SortableDataProvider[Place, String] {
-    override def iterator(first: Long, count: Long): util.Iterator[_ <: Place] = placeRepo.findAll(pageable).iterator()
-
-    override def model(obj: Place): IModel[Place] = new Model[Place](obj)
-
-    override def size(): Long = placeRepo.count()
-  }
-  val placesDv = new StatelessDataView[Place]("places", placeDp, pageable.getPageSize) {
-    override def populateItem(item: Item[Place]): Unit = {
-      val placeSlug = SlugUtils.generateSegment(item.getModelObject.getName)
-      item.add(new ExternalLink("link", s"/$localePrefId/$placeSlug", item.getModelObject.getName))
-    }
-  }
-  placesDv.setCurrentPage(pageable.getPageNumber)
-  add(placesDv)
-  add(new StatelessBootstrapPagingNavigator("navigator", placesDv, null))
-  private val googleBrowserApiKey = env.getRequiredProperty("googleBrowserApiKey")
-  val mapUri = UriComponentsBuilder.fromUriString("https://www.google.com/maps/embed/v1/place")
-    .queryParam("q", "Bandung, Jawa Barat, Indonesia")
-    .queryParam("key", googleBrowserApiKey).build()
-  add(new WebMarkupContainer("map")
-    .add(new AttributeModifier("src", mapUri)))
-
-  // Bandung, West Java, Indonesia: Travel Guide to Paris van Java/City of Flowers | Gigastic
-  override def getTitleModel: IModel[String] = new Model("Bandung, Jawa Barat, Indonesia: Informasi Tempat Wisata ke Paris van Java/Kota Kembang | Gigastic")
-  // Travel guide to Bandung (Paris van Java / City of Flowers), West Java, Indonesia, featuring up-to-date information on attractions, hotels, restaurants, nightlife, travel tips and more. Free and reliable advice written by Gigastic travelers from around the globe.
-  override def getMetaDescriptionModel: IModel[String] = new Model("Informasi daftar tempat wisata di Bandung, Jawa Barat Indonesia (Paris van Java/Kota Kembang). Pilihan wajib dikunjungi di musim liburan. Mulai dari wisata alam, wisata kuliner, wisata budaya, dan wisata unik di Bandung.")
-*/
 
 }

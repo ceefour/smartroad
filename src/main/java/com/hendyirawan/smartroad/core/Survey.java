@@ -46,6 +46,7 @@ public class Survey implements Serializable {
     private RoadDamageLevel damageLevel;
     @Enumerated(EnumType.STRING)
     private RoadDamageKind damageKind;
+    private Integer potholeCount;
     private Double potholeWidth;
     private Double potholeLength;
     private Double potholeDepth;
@@ -137,6 +138,14 @@ public class Survey implements Serializable {
 
     public void setDamageKind(RoadDamageKind damageKind) {
         this.damageKind = damageKind;
+    }
+
+    public Integer getPotholeCount() {
+        return potholeCount;
+    }
+
+    public void setPotholeCount(Integer potholeCount) {
+        this.potholeCount = potholeCount;
     }
 
     /**

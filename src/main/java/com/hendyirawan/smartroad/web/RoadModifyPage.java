@@ -1,11 +1,15 @@
 package com.hendyirawan.smartroad.web;
 
+import com.google.common.collect.ImmutableList;
 import com.hendyirawan.smartroad.core.Road;
+import com.hendyirawan.smartroad.core.RoadDamageKind;
+import com.hendyirawan.smartroad.core.RoadPavement;
 import com.hendyirawan.smartroad.core.RoadRepository;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextField;
@@ -59,6 +63,11 @@ public class RoadModifyPage extends PubLayout {
         form.setOutputMarkupId(true);
         form.add(new Label("idFld", new PropertyModel<>(model, "id")));
         form.add(new TextField<>("nameFld", new PropertyModel<>(model, "name")).setRequired(true));
+        final DropDownChoice<RoadPavement> pavementSelect = new DropDownChoice<>("pavementSelect", new PropertyModel<>(model, "pavement"),
+                ImmutableList.copyOf(RoadPavement.values()));
+        pavementSelect.setRequired(true);
+        pavementSelect.setOutputMarkupId(true);
+        form.add(pavementSelect);
         form.add(new TextField<>("descriptionFld", new PropertyModel<>(model, "description")));
         final NumberTextField<Double> widthFld = new NumberTextField<>("widthFld", new PropertyModel<>(model, "width"), Double.class);
         widthFld.setRequired(true);

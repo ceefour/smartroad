@@ -14,6 +14,7 @@ import java.io.Serializable;
         @Index(columnList = "creationTime"),
         @Index(columnList = "modificationTime"),
         @Index(columnList = "name"),
+        @Index(columnList = "pavement"),
         @Index(columnList = "width"),
         @Index(columnList = "length")
 })
@@ -22,6 +23,8 @@ public class Road implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Enumerated(EnumType.STRING)
+    private RoadPavement pavement;
     @Column(columnDefinition = "text")
     private String description;
     private Double width;
@@ -56,6 +59,14 @@ public class Road implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public RoadPavement getPavement() {
+        return pavement;
+    }
+
+    public void setPavement(RoadPavement pavement) {
+        this.pavement = pavement;
     }
 
     public String getDescription() {

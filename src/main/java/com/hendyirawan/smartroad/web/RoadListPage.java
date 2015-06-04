@@ -52,6 +52,7 @@ public class RoadListPage extends PubLayout {
                         RoadShowPage.class,
                         new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId),
                         "roadId", "id"),
+                new PropertyColumn<>(new Model<>("Pavement"), "pavement", "pavement"),
                 new PropertyColumn<>(new Model<>("Description"), "description"),
 //                new MeasureColumn<>(new Model<>("Length"), SI.METER, "length"), // // TODO: incompatible class :( see https://github.com/opengeospatial/geoapi/issues/8
                 new MeasureColumn<>(new Model<>("Width"), SI.METER, "width"),

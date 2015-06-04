@@ -119,6 +119,7 @@ public class SurveyShowPage extends PubLayout {
 //        form.add(new DateTimeLabel2("surveyTime", new PropertyModel<>(model, "surveyTime")));
         infoDiv.add(new Label("damageKind", new PropertyModel<>(model, "damageKind")));
         infoDiv.add(new Label("damageLevel", new PropertyModel<>(model, "damageLevel")));
+        infoDiv.add(new Label("potholeCount", new PropertyModel<>(model, "potholeCount")));
         infoDiv.add(new MeasureLabel("potholeWidth",
                 new Model<>(SI.MILLIMETER),
                 new PropertyModel<>(model, "potholeWidth")));
@@ -176,6 +177,7 @@ public class SurveyShowPage extends PubLayout {
 
                 survey.setDamageKind(analysis.damageKind);
                 survey.setDamageLevel(analysis.damageLevel);
+                survey.setPotholeCount(analysis.potholeCount);
                 survey.setPotholeWidth(analysis.totalPotholeWidth);
                 survey.setPotholeLength(analysis.totalPotholeLength);
                 survey.setPotholeDepth(analysis.totalPotholeDepth);
@@ -185,6 +187,7 @@ public class SurveyShowPage extends PubLayout {
                 camera.setSurveyTime(survey.getSurveyTime());
                 camera.setDamageKind(analysis.damageKind);
                 camera.setDamageLevel(analysis.damageLevel);
+                camera.setPotholeCount(analysis.potholeCount);
                 camera.setPotholeWidth(analysis.totalPotholeWidth);
                 camera.setPotholeLength(analysis.totalPotholeLength);
                 camera.setPotholeDepth(analysis.totalPotholeDepth);
