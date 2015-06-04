@@ -16,7 +16,8 @@ import java.io.Serializable;
         @Index(columnList = "modificationtime"),
         @Index(columnList = "surveytime"),
         @Index(columnList = "camera_id"),
-        @Index(columnList = "damagekind")
+        @Index(columnList = "damagekind"),
+        @Index(columnList = "damagelevel")
 })
 public class Survey implements Serializable {
 
@@ -41,6 +42,8 @@ public class Survey implements Serializable {
     @Type(type="org.hibernate.type.BinaryType")
     private byte[] photo;
 
+    @Enumerated(EnumType.STRING)
+    private RoadDamageLevel damageLevel;
     @Enumerated(EnumType.STRING)
     private RoadDamageKind damageKind;
     private Double potholeWidth;
@@ -118,6 +121,14 @@ public class Survey implements Serializable {
 
     public void setPhoto(byte[] photo) {
         this.photo = photo;
+    }
+
+    public RoadDamageLevel getDamageLevel() {
+        return damageLevel;
+    }
+
+    public void setDamageLevel(RoadDamageLevel damageLevel) {
+        this.damageLevel = damageLevel;
     }
 
     public RoadDamageKind getDamageKind() {

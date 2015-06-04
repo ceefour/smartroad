@@ -62,7 +62,8 @@ public class CameraListPage extends PubLayout {
 //                new MeasureColumn<>(new Model<>("Width"), SI.METER, "width"),
                 new MarkerMapColumn<>(new Model<>("Map"), "lat", "lon"),
                 new DateColumn<>(new Model<>("Surveyed"), "surveyTime"),
-                new PropertyColumn<>(new Model<>("Damage"), "damageKind", "damageKind")
+                new PropertyColumn<>(new Model<>("Damage"), "damageKind", "damageKind"),
+                new PropertyColumn<>(new Model<>("Level"), "damageLevel", "damageLevel")
             ), cameraDp, cameraDp.itemsPerPage);
         add(table);
         //add(new BootstrapPagingNavigator("navigator", cameraDp));

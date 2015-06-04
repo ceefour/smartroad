@@ -18,6 +18,7 @@ import java.util.Set;
         @Index(columnList = "name"),
         @Index(columnList = "road_id"),
         @Index(columnList = "damagekind"),
+        @Index(columnList = "damagelevel"),
         @Index(columnList = "surveytime")
 })
 public class Camera implements Serializable {
@@ -51,6 +52,8 @@ public class Camera implements Serializable {
     @OneToMany(mappedBy = "camera")
     private Set<Survey> surveys = new HashSet<>();
 
+    @Enumerated(EnumType.STRING)
+    private RoadDamageLevel damageLevel;
     @Column(columnDefinition = "timestamp with time zone")
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime surveyTime;
@@ -212,6 +215,14 @@ public class Camera implements Serializable {
 
     public Set<Survey> getSurveys() {
         return surveys;
+    }
+
+    public RoadDamageLevel getDamageLevel() {
+        return damageLevel;
+    }
+
+    public void setDamageLevel(RoadDamageLevel damageLevel) {
+        this.damageLevel = damageLevel;
     }
 
     public DateTime getSurveyTime() {

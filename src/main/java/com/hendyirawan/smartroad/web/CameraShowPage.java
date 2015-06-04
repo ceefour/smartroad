@@ -194,6 +194,7 @@ public class CameraShowPage extends PubLayout {
         infoDiv.setOutputMarkupId(true);
         infoDiv.add(new DateTimeLabel2("surveyTime", new PropertyModel<>(model, "surveyTime")));
         infoDiv.add(new Label("damageKind", new PropertyModel<>(model, "damageKind")));
+        infoDiv.add(new Label("damageLevel", new PropertyModel<>(model, "damageLevel")));
         infoDiv.add(new MeasureLabel("potholeWidth",
                 new Model<>(SI.MILLIMETER),
                 new PropertyModel<>(model, "potholeWidth")));

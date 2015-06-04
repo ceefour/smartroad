@@ -253,12 +253,20 @@ public class RoadAnalyzer {
                 totalPotholeWidth, totalPotholeLength, totalPotholeArea, totalPotholeDepth,
                 clusters.keySet().size());
         if (totalPotholeWidth > 0d) {
+            if (totalPotholeArea < 50000) {
+                roadAnalysis.damageLevel = RoadDamageLevel.LIGHT;
+            } else if (totalPotholeArea < 200000) {
+                roadAnalysis.damageLevel = RoadDamageLevel.MEDIUM;
+            } else {
+                roadAnalysis.damageLevel = RoadDamageLevel.HEAVY;
+            }
             roadAnalysis.damageKind = RoadDamageKind.POTHOLE;
             roadAnalysis.totalPotholeWidth = totalPotholeWidth;
             roadAnalysis.totalPotholeLength = totalPotholeLength;
             roadAnalysis.totalPotholeDepth = totalPotholeDepth;
             roadAnalysis.totalPotholeArea = totalPotholeArea;
         } else {
+            roadAnalysis.damageLevel = RoadDamageLevel.NONE;
             roadAnalysis.damageKind = RoadDamageKind.NONE;
         }
 

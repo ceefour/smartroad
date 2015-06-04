@@ -13,6 +13,7 @@ public class RoadAnalysis {
     public Mat edges;
     public Mat augmented;
 
+    public RoadDamageLevel damageLevel;
     public RoadDamageKind damageKind;
     @Nullable
     public Double totalPotholeWidth;
