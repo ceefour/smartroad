@@ -16,6 +16,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soluvas.web.site.SeoBookmarkableMapper;
+import org.soluvas.web.site.widget.DateColumn;
 import org.soluvas.web.site.widget.LinkColumn;
 import org.soluvas.web.site.widget.MarkerMapColumn;
 import org.springframework.core.env.Environment;
@@ -59,7 +60,9 @@ public class CameraListPage extends PubLayout {
                         "roadId", "road.id"),
 //                new MeasureColumn<>(new Model<>("Length"), SI.METER, "length"), // // TODO: incompatible class :( see https://github.com/opengeospatial/geoapi/issues/8
 //                new MeasureColumn<>(new Model<>("Width"), SI.METER, "width"),
-                new MarkerMapColumn<>(new Model<>("Map"), "lat", "lon")
+                new MarkerMapColumn<>(new Model<>("Map"), "lat", "lon"),
+                new DateColumn<>(new Model<>("Surveyed"), "surveyTime"),
+                new PropertyColumn<>(new Model<>("Damage"), "damageKind", "damageKind")
             ), cameraDp, cameraDp.itemsPerPage);
         add(table);
         //add(new BootstrapPagingNavigator("navigator", cameraDp));

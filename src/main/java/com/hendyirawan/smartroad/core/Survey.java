@@ -15,7 +15,8 @@ import java.io.Serializable;
         @Index(columnList = "creationtime"),
         @Index(columnList = "modificationtime"),
         @Index(columnList = "surveytime"),
-        @Index(columnList = "camera_id")
+        @Index(columnList = "camera_id"),
+        @Index(columnList = "damagekind")
 })
 public class Survey implements Serializable {
 

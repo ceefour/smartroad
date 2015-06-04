@@ -132,6 +132,16 @@ public class SurveyShowPage extends PubLayout {
                 new PropertyModel<>(model, "potholeArea")));
         form.add(infoDiv);
 
+        final WebMarkupContainer potholeInfo = new WebMarkupContainer("potholeInfo") {
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+                setVisible(RoadDamageKind.POTHOLE.equals(model.getObject().getDamageKind()));
+            }
+        };
+        potholeInfo.setOutputMarkupId(true);
+        form.add(potholeInfo);
+
         form.add(new IndicatingAjaxButton("analyzeBtn") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
@@ -170,7 +180,15 @@ public class SurveyShowPage extends PubLayout {
                 survey.setPotholeArea(analysis.totalPotholeArea);
                 surveyRepo.save(survey);
 
-                target.add(augmentedImg, blurredImg, resultImg, infoDiv);
+                camera.setSurveyTime(survey.getSurveyTime());
+                camera.setDamageKind(analysis.damageKind);
+                camera.setPotholeWidth(analysis.totalPotholeWidth);
+                camera.setPotholeLength(analysis.totalPotholeLength);
+                camera.setPotholeDepth(analysis.totalPotholeDepth);
+                camera.setPotholeArea(analysis.totalPotholeArea);
+                cameraRepo.save(camera);
+
+                target.add(augmentedImg, blurredImg, resultImg, infoDiv, potholeInfo);
             }
         });
 

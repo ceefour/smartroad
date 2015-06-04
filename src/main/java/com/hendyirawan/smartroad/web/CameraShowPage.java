@@ -18,6 +18,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.datetime.StyleDateConverter;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -188,6 +189,33 @@ public class CameraShowPage extends PubLayout {
         form.add(new Label("vanishVLabel", new PropertyModel<>(model, "vanishV")));
         form.add(new Label("leftULabel", new PropertyModel<>(model, "leftU")));
         form.add(new Label("rightULabel", new PropertyModel<>(model, "rightU")));
+
+        final WebMarkupContainer infoDiv = new WebMarkupContainer("infoDiv");
+        infoDiv.setOutputMarkupId(true);
+        infoDiv.add(new DateTimeLabel2("surveyTime", new PropertyModel<>(model, "surveyTime")));
+        infoDiv.add(new Label("damageKind", new PropertyModel<>(model, "damageKind")));
+        infoDiv.add(new MeasureLabel("potholeWidth",
+                new Model<>(SI.MILLIMETER),
+                new PropertyModel<>(model, "potholeWidth")));
+        infoDiv.add(new MeasureLabel("potholeLength",
+                new Model<>(SI.MILLIMETER),
+                new PropertyModel<>(model, "potholeLength")));
+        infoDiv.add(new MeasureLabel("potholeDepth",
+                new Model<>(SI.MILLIMETER),
+                new PropertyModel<>(model, "potholeDepth")));
+        infoDiv.add(new MeasureLabel("potholeArea",
+                new Model<>(SI.MILLIMETER.times(SI.MILLIMETER)),
+                new PropertyModel<>(model, "potholeArea")));
+        form.add(infoDiv);
+
+        final WebMarkupContainer potholeInfo = new WebMarkupContainer("potholeInfo") {
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+                setVisible(RoadDamageKind.POTHOLE.equals(model.getObject().getDamageKind()));
+            }
+        };
+        form.add(potholeInfo);
 
         form.add(new BookmarkablePageLink<>("addSurveyLink", SurveyModifyPage.class,
                 new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)

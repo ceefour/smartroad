@@ -16,7 +16,9 @@ import java.util.Set;
         @Index(columnList = "creationTime"),
         @Index(columnList = "modificationTime"),
         @Index(columnList = "name"),
-        @Index(columnList = "road_id")
+        @Index(columnList = "road_id"),
+        @Index(columnList = "damagekind"),
+        @Index(columnList = "surveytime")
 })
 public class Camera implements Serializable {
 
@@ -48,6 +50,16 @@ public class Camera implements Serializable {
     private byte[] calibrationImage;
     @OneToMany(mappedBy = "camera")
     private Set<Survey> surveys = new HashSet<>();
+
+    @Column(columnDefinition = "timestamp with time zone")
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    private DateTime surveyTime;
+    @Enumerated(EnumType.STRING)
+    private RoadDamageKind damageKind;
+    private Double potholeWidth;
+    private Double potholeLength;
+    private Double potholeDepth;
+    private Double potholeArea;
 
     public String getId() {
         return id;
@@ -201,4 +213,69 @@ public class Camera implements Serializable {
     public Set<Survey> getSurveys() {
         return surveys;
     }
+
+    public DateTime getSurveyTime() {
+        return surveyTime;
+    }
+
+    public void setSurveyTime(DateTime surveyTime) {
+        this.surveyTime = surveyTime;
+    }
+
+    public RoadDamageKind getDamageKind() {
+        return damageKind;
+    }
+
+    public void setDamageKind(RoadDamageKind damageKind) {
+        this.damageKind = damageKind;
+    }
+
+    /**
+     * If exists, pothole width ACROSS the road, in {@link javax.measure.unit.SI#MILLIMETER}.
+     * @return
+     */
+    public Double getPotholeWidth() {
+        return potholeWidth;
+    }
+
+    public void setPotholeWidth(Double potholeWidth) {
+        this.potholeWidth = potholeWidth;
+    }
+
+    /**
+     * If exists, pothole length ALONG the road, in {@link javax.measure.unit.SI#MILLIMETER}.
+     * @return
+     */
+    public Double getPotholeLength() {
+        return potholeLength;
+    }
+
+    public void setPotholeLength(Double potholeLength) {
+        this.potholeLength = potholeLength;
+    }
+
+    /**
+     * If exists, pothole depth, in {@link javax.measure.unit.SI#MILLIMETER}.
+     * @return
+     */
+    public Double getPotholeDepth() {
+        return potholeDepth;
+    }
+
+    public void setPotholeDepth(Double potholeDepth) {
+        this.potholeDepth = potholeDepth;
+    }
+
+    /**
+     * If exists, pothole area, in square {@link javax.measure.unit.SI#MILLIMETER}.
+     * @return
+     */
+    public Double getPotholeArea() {
+        return potholeArea;
+    }
+
+    public void setPotholeArea(Double potholeArea) {
+        this.potholeArea = potholeArea;
+    }
+
 }
