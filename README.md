@@ -36,3 +36,20 @@ Windows:
         ENCODING 'UTF8';
     \c smartroad_smartroad_dev
     CREATE SCHEMA smartroad;
+
+### Dump Database to Server
+
+Dump it:
+
+    cd ~/git/smartroad/snapshot
+    pg_dump -hlocalhost -Upostgres -Fc -f smartroad_smartroad_dev.postgresql smartroad_smartroad_dev
+
+Rsync to server:
+
+    rsync -P smartroad_smartroad_dev.postgresql power172:
+
+The restore fully to `smartroad_smartroad_prd` : (WARNING: THIS WILL WIPE THE PRD DATABASE!)
+
+    pg_restore -h localhost -Upostgres -d smartroad_smartroad_prd --clean smartroad_smartroad_dev.postgresql 
+
+
