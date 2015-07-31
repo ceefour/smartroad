@@ -1,5 +1,6 @@
 package com.hendyirawan.smartroad.web;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.hendyirawan.smartroad.core.Camera;
 import com.hendyirawan.smartroad.core.CameraRepository;
@@ -68,7 +69,8 @@ public class RoadShowPage extends PubLayout {
     public RoadShowPage(PageParameters parameters) {
         super(parameters);
         final long roadId = parameters.get("roadId").toLong();
-        final Road road = roadRepo.findOne(roadId);
+        final Road road = Preconditions.checkNotNull(roadRepo.findOne(roadId),
+                "Cannot find road '%s'", roadId);
         model = new Model<>(road);
         setDefaultModel(model);
 

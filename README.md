@@ -8,7 +8,7 @@ Currently, measurement of road damage levels must be done using manual surveys w
 
 ### OpenCV
 
-Ubuntu 14.04 / Linux Mint 17:
+#### Ubuntu 14.04 / Linux Mint 17
 
 1. Install `libopencv2.4-jni` (works on Power too):
 
@@ -20,6 +20,19 @@ Ubuntu 14.04 / Linux Mint 17:
     `/opt/ibm/java-ppc64le-80/jre/lib/ppc64le/compressedrefs:/opt/ibm/java-ppc64le-80/jre/lib/ppc64le:/usr/lib`
 
         sudo ln -sv /usr/lib/jni/libopencv_java248.so /usr/lib
+
+#### Windows 64-bit
+
+OpenCV for Windows x64 DLL is needed, dan sudah dimasukkan ke git juga biar gampang.
+
+Copy `opencv\win_x64\opencv_java*.dll` DLL tersebut ke `C:\ProgramData\Oracle\Java\javapath`
+
+_Hendy's internal note:_ The `org.opencv:opencv` artifact is published in `soluvas-public-thirdparty`.
+You can re-publish (if you update the OpenCV version) to `soluvas-thirdparty` using:
+
+```
+mvn deploy:deploy-file -DrepositoryId=soluvas-public-thirdparty -Durl=http://nexus.bippo.co.id/nexus/content/repositories/soluvas-public-thirdparty/ -Dfile=opencv/opencv-2411.jar -Dpackaging=jar -DgroupId=org.opencv -DartifactId=opencv -Dversion=2.4.11
+```
 
 ### PostgreSQL
 
