@@ -1,8 +1,8 @@
 package com.hendyirawan.smartroad.web;
 
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.soluvas.web.site.SeoBookmarkableMapper;
 
 /**
  * Created by ceefour on 27/12/14.

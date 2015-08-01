@@ -15,9 +15,9 @@ import org.springframework.context.annotation.Profile;
 )
 @Profile("daemon")
 //@ComponentScan(excludeFilters=@ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, value=CommandLineRunner.class))
-public class DaemonApplication implements CommandLineRunner {
+public class DaemonApp implements CommandLineRunner {
 
-    private static Logger log = LoggerFactory.getLogger(DaemonApplication.class);
+    private static Logger log = LoggerFactory.getLogger(DaemonApp.class);
 
     static {
         log.info("Loading OpenCV: {} from {}", Core.NATIVE_LIBRARY_NAME, System.getProperty("java.library.path"));
@@ -25,7 +25,7 @@ public class DaemonApplication implements CommandLineRunner {
     }
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(DaemonApplication.class)
+        new SpringApplicationBuilder(DaemonApp.class)
                 .profiles("daemon")
                 .run(args);
     }

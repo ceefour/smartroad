@@ -4,9 +4,7 @@ import com.hendyirawan.smartroad.core.RoadAnalysis;
 import com.hendyirawan.smartroad.core.RoadAnalyzer;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
-import org.opencv.imgproc.Imgproc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -25,9 +23,9 @@ import java.io.File;
             WebMvcAutoConfiguration.class}
 )
 @Profile("cli")
-public class CliApplication implements CommandLineRunner {
+public class CliApp implements CommandLineRunner {
 
-    private static Logger log = LoggerFactory.getLogger(CliApplication.class);
+    private static Logger log = LoggerFactory.getLogger(CliApp.class);
 
     static {
         log.info("Loading OpenCV: {} from {}", Core.NATIVE_LIBRARY_NAME, System.getProperty("java.library.path"));
@@ -35,7 +33,7 @@ public class CliApplication implements CommandLineRunner {
     }
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(CliApplication.class)
+        new SpringApplicationBuilder(CliApp.class)
                 .profiles("cli")
                 .web(false)
                 .run(args);
