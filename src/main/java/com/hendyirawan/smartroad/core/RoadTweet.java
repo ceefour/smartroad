@@ -6,6 +6,7 @@ import org.joda.time.DateTimeZone;
 import twitter4j.GeoLocation;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Locale;
 
 /**
@@ -20,7 +21,7 @@ import java.util.Locale;
         @Index(columnList = "userId"),
         @Index(columnList = "userScreenName"),
 })
-public class RoadTweet {
+public class RoadTweet implements Serializable {
 
     @Id
     private Long id;

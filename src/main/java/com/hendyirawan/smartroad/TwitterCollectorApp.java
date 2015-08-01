@@ -20,6 +20,7 @@ import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
 
 import javax.inject.Inject;
+import javax.measure.unit.SI;
 import java.util.Locale;
 
 //@EnableAutoConfiguration
@@ -73,7 +74,7 @@ public class TwitterCollectorApp implements CommandLineRunner {
         final DateTime fetchTime = new DateTime();
         final QueryResult results = twitter.search(
                 new Query("jalan rusak").count(100)
-                        .geoCode(new GeoLocation(-2.67, 119.56), 1500, "km")); // Indonesia. TODO: use JSR36 in the future
+                        .geoCode(new GeoLocation(-2.67, 119.56), 1500, SI.KILOMETRE.toString())); // Indonesia. TODO: use JSR36 in the future
         for (Status tweet : results.getTweets()) {
             final DateTimeZone timeZone = DateTimeZone.forOffsetMillis(tweet.getUser().getUtcOffset() * 1000);
             final DateTime creationTime = new DateTime(tweet.getCreatedAt(), timeZone);

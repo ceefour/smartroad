@@ -35,11 +35,26 @@
 			<artifactId>jdatauri</artifactId>
 			<version>1.0</version>
 		</dependency>
-        <dependency>
-            <groupId>org.apache.tika</groupId>
-            <artifactId>tika-parsers</artifactId>
-            <version>1.8</version>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-parsers</artifactId>
+			<version>1.9</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<!-- TODO: soluvas-framework should switch to jsr-275 to make it compatible with apache sis THEN switch to jsr-363 -->
+					<groupId>javax.measure</groupId>
+					<artifactId>jsr-275</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<dependency>
 			<!-- required by tika-parsers -->
 			<groupId>xml-apis</groupId>
@@ -79,6 +94,29 @@
 			<artifactId>com.jaspersoft.studio.data.mongodb</artifactId>
 			<version>5.1.0.soluvas4</version>
 		</dependency>-->
+
+		<!-- Tika has older dependencies, so let's make sure we have better dependencies -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.4.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient-cache</artifactId>
+			<version>4.5</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.soluvas</groupId>
@@ -121,6 +159,18 @@
 					<artifactId>cglib</artifactId>
 				</exclusion>
 			</exclusions>
+        </dependency>
+		<dependency>
+			<!-- to override old version specified by wicket-bootstrap-extensions -->
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-extensions</artifactId>
+            <version>6.20.0</version>
+        </dependency>
+		<dependency>
+			<!-- to override old version specified by wicket-bootstrap-extensions -->
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-util</artifactId>
+            <version>6.20.0</version>
         </dependency>
 		<dependency>
 			<groupId>cglib</groupId>

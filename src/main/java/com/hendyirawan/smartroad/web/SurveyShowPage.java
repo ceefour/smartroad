@@ -121,16 +121,16 @@ public class SurveyShowPage extends PubLayout {
         infoDiv.add(new Label("damageLevel", new PropertyModel<>(model, "damageLevel")));
         infoDiv.add(new Label("potholeCount", new PropertyModel<>(model, "potholeCount")));
         infoDiv.add(new MeasureLabel("potholeWidth",
-                new Model<>(SI.MILLIMETER),
+                new Model<>(SI.MILLIMETRE),
                 new PropertyModel<>(model, "potholeWidth")));
         infoDiv.add(new MeasureLabel("potholeLength",
-                new Model<>(SI.MILLIMETER),
+                new Model<>(SI.MILLIMETRE),
                 new PropertyModel<>(model, "potholeLength")));
         infoDiv.add(new MeasureLabel("potholeDepth",
-                new Model<>(SI.MILLIMETER),
+                new Model<>(SI.MILLIMETRE),
                 new PropertyModel<>(model, "potholeDepth")));
         infoDiv.add(new MeasureLabel("potholeArea",
-                new Model<>(SI.MILLIMETER.times(SI.MILLIMETER)),
+                new Model<>(SI.MILLIMETRE.times(SI.MILLIMETRE)),
                 new PropertyModel<>(model, "potholeArea")));
         form.add(infoDiv);
 
