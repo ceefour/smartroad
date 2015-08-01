@@ -95,6 +95,7 @@ public class TwitterAutoFollowApp implements CommandLineRunner {
             Thread.sleep(60000);
         }
 
-        log.info("Auto-follow for {} done", twitterConfig.getAppScreenName());
+        final int friendCount = twitterFollowedRepo.countByFollowerScreenNameLower(twitterConfig.getAppScreenName().toLowerCase());
+        log.info("Auto-follow for {} done, now has {} friends", twitterConfig.getAppScreenName(), friendCount);
     }
 }
