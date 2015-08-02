@@ -35,6 +35,8 @@ import java.util.Locale;
 public class TwitterCollectorApp implements CommandLineRunner {
 
     private static Logger log = LoggerFactory.getLogger(TwitterCollectorApp.class);
+    public static final double INDONESIA_CENTER_LAT = -2.7;
+    public static final double INDONESIA_CENTER_LON = 117.0;
 
     static {
         log.info("Loading OpenCV: {} from {}", Core.NATIVE_LIBRARY_NAME, System.getProperty("java.library.path"));
@@ -74,7 +76,7 @@ public class TwitterCollectorApp implements CommandLineRunner {
         final DateTime fetchTime = new DateTime();
         final QueryResult results = twitter.search(
                 new Query("jalan rusak").count(100)
-                        .geoCode(new GeoLocation(-2.67, 119.56), 1500, SI.KILOMETRE.toString())); // Indonesia. TODO: use JSR36 in the future
+                        .geoCode(new GeoLocation(INDONESIA_CENTER_LAT, INDONESIA_CENTER_LON), 1500, SI.KILOMETRE.toString())); // Indonesia. TODO: use JSR36 in the future
         for (Status tweet : results.getTweets()) {
             final DateTimeZone timeZone = DateTimeZone.forOffsetMillis(tweet.getUser().getUtcOffset() * 1000);
             final DateTime creationTime = new DateTime(tweet.getCreatedAt(), timeZone);
