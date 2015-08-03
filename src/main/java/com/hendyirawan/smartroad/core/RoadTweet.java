@@ -3,7 +3,6 @@ package com.hendyirawan.smartroad.core;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import twitter4j.GeoLocation;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -43,6 +42,7 @@ public class RoadTweet implements Serializable {
     @Column(columnDefinition = "varchar(255)")
     @Type(type="org.soluvas.jpa.PersistentLocale")
     private Locale userLang;
+    @Column(columnDefinition = "text")
     private String text;
     @Column(columnDefinition = "varchar(255)")
     @Type(type="org.soluvas.jpa.PersistentLocale")
@@ -53,6 +53,7 @@ public class RoadTweet implements Serializable {
     private String placeName;
     private String placeFullName;
     private String placeType;
+    @Column(length = 4000)
     private String placeUri;
     private String placeCountry;
     private String placeCountryCode;
@@ -64,6 +65,29 @@ public class RoadTweet implements Serializable {
     private String placeBoundingBoxType;
     private Double lat;
     private Double lon;
+    private Long mediaId;
+    @Column(columnDefinition = "text")
+    private String mediaText;
+    @Column(length = 4000)
+    private String mediaUriHttp;
+    @Column(length = 4000)
+    private String mediaUriHttps;
+    private String mediaType;
+    @Column(length = 4000)
+    private String mediaNormalUri;
+    @Column(length = 4000)
+    private String mediaDisplayUri;
+    @Column(length = 4000)
+    private String mediaExpandedUri;
+    @Column(columnDefinition = "text")
+    private String mediaSizes;
+    private String mediaContentType;
+    private Integer mediaContentLength;
+    private String mediaExtension;
+    @Column(columnDefinition = "bytea")
+    private byte[] mediaContent;
+    private Integer mediaWidth;
+    private Integer mediaHeight;
 
     public Long getId() {
         return id;
@@ -287,5 +311,208 @@ public class RoadTweet implements Serializable {
 
     public void setLon(Double lon) {
         this.lon = lon;
+    }
+
+    public Long getMediaId() {
+        return mediaId;
+    }
+
+    public void setMediaId(Long mediaId) {
+        this.mediaId = mediaId;
+    }
+
+    /**
+     * Usually same as {@link #getMediaNormalUri()}.
+     * @return
+     */
+    public String getMediaText() {
+        return mediaText;
+    }
+
+    public void setMediaText(String mediaText) {
+        this.mediaText = mediaText;
+    }
+
+    /**
+     * Real downloadable expanded media URI for insecure, e.g. {@link http://pbs.twimg.com/media/CLVc93XUAAEc0h5.jpg}.
+     * The dimensions is the last one in the {@link #getMediaSizes()}.
+     * @return
+     */
+    public String getMediaUriHttp() {
+        return mediaUriHttp;
+    }
+
+    public void setMediaUriHttp(String mediaUriHttp) {
+        this.mediaUriHttp = mediaUriHttp;
+    }
+
+    /**
+     * Real downloadable expanded media URI for secure, e.g. {@link https://pbs.twimg.com/media/CLVc93XUAAEc0h5.jpg}.
+     * The dimensions is the last one in the {@link #getMediaSizes()}.
+     * @return
+     */
+    public String getMediaUriHttps() {
+        return mediaUriHttps;
+    }
+
+    public void setMediaUriHttps(String mediaUriHttps) {
+        this.mediaUriHttps = mediaUriHttps;
+    }
+
+    /**
+     * e.g. {@code photo}.
+     * @return
+     */
+    public String getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
+    }
+
+    /**
+     * The shortened URI of the media file, e.g. {@code http://t.co/TjaIHReGJk}.
+     * @return
+     */
+    public String getMediaNormalUri() {
+        return mediaNormalUri;
+    }
+
+    public void setMediaNormalUri(String mediaNormalUri) {
+        this.mediaNormalUri = mediaNormalUri;
+    }
+
+    /**
+     * Only showing the shortlink for media page, it's not a valid URI,
+     * e.g. {@code pic.twitter.com/TjaIHReGJk}.
+     * @return
+     */
+    public String getMediaDisplayUri() {
+        return mediaDisplayUri;
+    }
+
+    public void setMediaDisplayUri(String mediaDisplayUri) {
+        this.mediaDisplayUri = mediaDisplayUri;
+    }
+
+    /**
+     * Media page URI, e.g. {@code http://twitter.com/guruh_texas/status/627509970775310336/photo/1}.
+     * @return
+     */
+    public String getMediaExpandedUri() {
+        return mediaExpandedUri;
+    }
+
+    public void setMediaExpandedUri(String mediaExpandedUri) {
+        this.mediaExpandedUri = mediaExpandedUri;
+    }
+
+    /**
+     * e.g.
+     *
+     * <pre>
+     * {
+     *   "0" : {
+     *     "width" : 150,
+     *     "height" : 150,
+     *     "resize" : 101
+     *   },
+     *   "1" : {
+     *     "width" : 340,
+     *     "height" : 604,
+     *     "resize" : 100
+     *   },
+     *   "2" : {
+     *     "width" : 576,
+     *     "height" : 1024,
+     *     "resize" : 100
+     *   },
+     *   "3" : {
+     *     "width" : 576,
+     *     "height" : 1024,
+     *     "resize" : 100
+     *   }
+     * }
+     * </pre>
+     *
+     * @return
+     */
+    public String getMediaSizes() {
+        return mediaSizes;
+    }
+
+    public void setMediaSizes(String mediaSizes) {
+        this.mediaSizes = mediaSizes;
+    }
+
+    public String getMediaContentType() {
+        return mediaContentType;
+    }
+
+    public void setMediaContentType(String mediaContentType) {
+        this.mediaContentType = mediaContentType;
+    }
+
+    public Integer getMediaContentLength() {
+        return mediaContentLength;
+    }
+
+    public void setMediaContentLength(Integer mediaContentLength) {
+        this.mediaContentLength = mediaContentLength;
+    }
+
+    /**
+     * Extension without ".", e.g. {@code jpg}.
+     * @return
+     */
+    public String getMediaExtension() {
+        return mediaExtension;
+    }
+
+    public void setMediaExtension(String mediaExtension) {
+        this.mediaExtension = mediaExtension;
+    }
+
+    public byte[] getMediaContent() {
+        return mediaContent;
+    }
+
+    public void setMediaContent(byte[] mediaContent) {
+        this.mediaContent = mediaContent;
+    }
+
+    /**
+     * Width of largest image.
+     * @return
+     */
+    public Integer getMediaWidth() {
+        return mediaWidth;
+    }
+
+    public void setMediaWidth(Integer mediaWidth) {
+        this.mediaWidth = mediaWidth;
+    }
+
+    /**
+     * Height of largest image.
+     * @return
+     */
+    public Integer getMediaHeight() {
+        return mediaHeight;
+    }
+
+    public void setMediaHeight(Integer mediaHeight) {
+        this.mediaHeight = mediaHeight;
+    }
+
+    /**
+     * Gets the image path to {@link com.hendyirawan.smartroad.mvc.RoadTweetController#getRoadTweetMedia(long)},
+     * relative to app's base URI.
+     * @return If not exists returns {@code null}.
+     */
+    @Transient
+    public String getImagePathForApp() {
+       return "photo".equalsIgnoreCase(getMediaType()) ? "/tweets/" + getId() + "/media" : null;
     }
 }

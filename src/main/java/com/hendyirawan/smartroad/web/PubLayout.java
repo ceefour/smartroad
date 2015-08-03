@@ -41,6 +41,11 @@ public abstract class PubLayout extends WebPage {
                 new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)));
         add(new BookmarkablePageLink<>("camerasLink", CameraListPage.class,
                 new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)));
+
+        add(new BookmarkablePageLink<>("tweetListLink", TweetListPage.class,
+                new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)));
+        add(new BookmarkablePageLink<>("tweetMapLink", TweetMapPage.class,
+                new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId)));
     }
 
     @Override

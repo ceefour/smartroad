@@ -1,7 +1,6 @@
 package com.hendyirawan.smartroad.web;
 
 import com.google.common.collect.ImmutableList;
-import com.hendyirawan.smartroad.core.Camera;
 import com.hendyirawan.smartroad.core.RoadTweet;
 import com.hendyirawan.smartroad.core.RoadTweetRepository;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.BootstrapPagingNavigator;
@@ -13,9 +12,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.soluvas.web.site.SeoBookmarkableMapper;
 import org.soluvas.web.site.widget.DateColumn;
-import org.soluvas.web.site.widget.LinkColumn;
+import org.soluvas.web.site.widget.UriImageColumn;
 import org.soluvas.web.site.widget.MarkerMapColumn;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
@@ -47,7 +45,8 @@ public class TweetListPage extends PubLayout {
                 new PropertyColumn<>(new Model<>("Text"), "text"),
                 new MarkerMapColumn<>(new Model<>("Map"), "lat", "lon"),
                 new PropertyColumn<>(new Model<>("Place"), "placeFullName"),
-                new DateColumn<>(new Model<>("Created"), "creationTime")
+                new DateColumn<>(new Model<>("Created"), "creationTime"),
+                new UriImageColumn<>(new Model<>("Media"), "imagePathForApp", 120)
             ), roadTweetDp, roadTweetDp.itemsPerPage);
         add(table);
         add(new BootstrapPagingNavigator("navigator", table));

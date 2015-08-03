@@ -24,8 +24,8 @@
         </div>
 -->
         <form wicket:id="form" class="container">
-            <div class="about-section">
-                <!--<div class="col-md-12 about-top">-->
+            <div class="about-section row">
+                <div class="col-md-9">
                     <h3>Tweets</h3>
                     <!--<h4>Bandung &middot; Jawa Barat, Indonesia</h4>-->
                     <p>
@@ -34,13 +34,20 @@
                     <div class="table-responsive">
                         <div wicket:id="map" style="width: 100%; height: 30em"></div>
                     </div>
-                <!--</div>-->
-                <!--<div class="col-md-4 about-bottom">-->
-                    <!--<h3>More info</h3>-->
-
-                    <!--<div class="clearfix"> </div>
                 </div>
-                <div class="clearfix"> </div>-->
+                <div class="col-md-3" wicket:id="sideDiv">
+                    <div wicket:id="tweetDiv">
+                        <h3>@<wicket:container wicket:id="userScreenName">user</wicket:container></h3>
+                        <p wicket:id="placeFullName" class="label label-default">Place name</p>
+                        <p><img class="img img-responsive" wicket:id="img"/></p>
+                        <p wicket:id="text">Tweet</p>
+                        <p><small class="text-muted" wicket:id="creationTime">creation time</small></p>
+                    </div>
+
+                    <!--<h3>More info</h3>-->
+                    <!--<div class="clearfix"> </div>-->
+                </div>
+                <!--<div class="clearfix"> </div>-->
             </div>
         </form>
     </div>
