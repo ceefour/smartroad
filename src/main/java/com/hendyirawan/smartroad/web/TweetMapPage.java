@@ -29,10 +29,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.wicketstuff.annotation.mount.MountPath;
 import org.wicketstuff.gmap.GMap;
-import org.wicketstuff.gmap.api.GLatLng;
-import org.wicketstuff.gmap.api.GMarker;
-import org.wicketstuff.gmap.api.GMarkerOptions;
-import org.wicketstuff.gmap.api.GPolyline;
+import org.wicketstuff.gmap.api.*;
 
 import javax.inject.Inject;
 import javax.measure.unit.SI;
@@ -44,6 +41,8 @@ import java.util.Iterator;
 public class TweetMapPage extends PubLayout {
 
     private static final Logger log = LoggerFactory.getLogger(TweetMapPage.class);
+
+    public static final GIcon ICON_BROKEN = new GIcon("/road_sign/broken.png", new GSize(32, 32), new GPoint(15, 15));
 
     @Inject
     private RoadTweetRepository roadTweetRepo;
@@ -97,7 +96,7 @@ public class TweetMapPage extends PubLayout {
             final String markerTitle = "@" + roadTweet.getUserScreenName() + ": " +
                     CharMatcher.WHITESPACE.replaceFrom(roadTweet.getText(), " ");
             gmap.addOverlay(new GMarker(new GMarkerOptions(gmap, tweetLatLng,
-                    markerTitle)));
+                    markerTitle, ICON_BROKEN)));
 
 //            form.add(new MeasureLabel("widthLabel", new Model<>(SI.METER), new PropertyModel<>(model, "width")));
 //            form.add(new MeasureLabel("startEleLabel", new Model<>(SI.METER), new PropertyModel<>(model, "startEle")));
