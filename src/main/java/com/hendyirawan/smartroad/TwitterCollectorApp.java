@@ -175,7 +175,7 @@ public class TwitterCollectorApp implements CommandLineRunner {
             }
 
             final LocalDate today = new LocalDate(DateTimeZone.forID("Asia/Jakarta"));
-            if (until.isBefore(today)) {
+            if (until.isBefore(today.plusDays(1))) {
                 until = until.plusDays(1);
             }
 
