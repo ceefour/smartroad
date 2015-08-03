@@ -31,6 +31,7 @@ public class MyWebApplication extends WebApplication {
     @Override
     public void init() {
         super.init();
+        getDebugSettings().setAjaxDebugModeEnabled(false);
         getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));
 
