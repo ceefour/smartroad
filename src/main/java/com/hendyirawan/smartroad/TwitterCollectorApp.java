@@ -91,7 +91,7 @@ public class TwitterCollectorApp implements CommandLineRunner {
 //            log.info("Collecting tweets since ID {} ...", since);
             log.info("Collecting tweets since {} until {} ...", since, until);
             Query query = new Query("jalan rusak OR jalan lubang OR jalan berlubang").count(100)
-                    .geoCode(new GeoLocation(INDONESIA_CENTER_LAT, INDONESIA_CENTER_LON), 2000, SI.KILOMETRE.toString()) // Indonesia. TODO: use JSR36 in the future
+                    //.geoCode(new GeoLocation(INDONESIA_CENTER_LAT, INDONESIA_CENTER_LON), 2000, SI.KILOMETRE.toString()) // Indonesia. TODO: use JSR36 in the future
                     .sinceId(since)
                     .until(until.toString())
                     .resultType(Query.ResultType.recent);
