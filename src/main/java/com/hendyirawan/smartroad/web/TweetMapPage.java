@@ -121,7 +121,8 @@ public class TweetMapPage extends PubLayout {
         sideDiv.add(tweetDiv);
         form.add(sideDiv);
 
-        final ImmutableList<RoadTweet> roadTweets = ImmutableList.copyOf(roadTweetRepo.findAll());
+        final List<RoadTweet> roadTweets = roadTweetRepo.findAllWithLocation(
+                new PageRequest(0, 100, Sort.Direction.DESC, "fetchTime")).getContent();
         log.info("Got {} road tweets from repo", roadTweets.size());
         for (final RoadTweet roadTweet : roadTweets) {
             if (roadTweet.isRetweet()) {

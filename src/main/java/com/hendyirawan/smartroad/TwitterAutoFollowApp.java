@@ -60,8 +60,11 @@ public class TwitterAutoFollowApp implements CommandLineRunner {
                 .run(args);
     }
 
-    @Override
-    public void run(String... args) throws Exception {
+    /**
+     * Follow all unfollowed users, waiting 1 minute after each follow.
+     * @throws Exception
+     */
+    public void followBatch() throws Exception {
         // get all our current followers first
         final Set<String> followeds = twitterFollowedRepo.findAllFolloweds(twitterConfig.getAppScreenName().toLowerCase());
         log.info("{} has followed {} users: {}", twitterConfig.getAppScreenName(), followeds.size(),
@@ -97,5 +100,14 @@ public class TwitterAutoFollowApp implements CommandLineRunner {
 
         final int friendCount = twitterFollowedRepo.countByFollowerScreenNameLower(twitterConfig.getAppScreenName().toLowerCase());
         log.info("Auto-follow for {} done, now has {} friends", twitterConfig.getAppScreenName(), friendCount);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        while (true) {
+            followBatch();
+            log.info("(Follow forever) Waiting 15 minute before next follow batch...");
+            Thread.sleep(15 * 60000);
+        }
     }
 }

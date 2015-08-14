@@ -50,19 +50,53 @@ Windows:
     \c smartroad_smartroad_dev
     CREATE SCHEMA smartroad;
 
-### Dump Database to Server
+## Dump Database to Server
 
 Dump it:
 
-    cd ~/git/smartroad/snapshot
-    pg_dump -hlocalhost -Upostgres -Fc -f smartroad_smartroad_dev.postgresql smartroad_smartroad_dev
+    pg_dump -hlocalhost -Upostgres -Fc -f ~/tmp/smartroad_smartroad_dev.postgresql smartroad_smartroad_dev
+
+Important: While you're at it, backup the snapshot to `/media/ceefour/passport/project_passport/smartroad/snapshot`
 
 Rsync to server:
 
-    rsync -P smartroad_smartroad_dev.postgresql power172:
+    rsync -P ~/tmp/smartroad_smartroad_dev.postgresql ceefour@luna3:
 
 The restore fully to `smartroad_smartroad_prd` : (WARNING: THIS WILL WIPE THE PRD DATABASE!)
 
-    pg_restore -h localhost -Upostgres -d smartroad_smartroad_prd --clean smartroad_smartroad_dev.postgresql 
+    pg_restore -h nobunaga2.bippo.co.id -Usmartroad_smartroad_prd -d smartroad_smartroad_prd --clean --no-owner smartroad_smartroad_dev.postgresql 
 
 
+## Production Setup
+
+Production details are in:
+
+* `Dropbox/helpfriend/.../SmartRoad DevOps.odt`
+* `Dropbox/helpfriend/.../prd/application.properties`
+
+### OpenCV on Ubuntu 14.04
+
+1. Install `libopencv2.4-jni` (works on Power too):
+
+        sudo aptitude install libopencv2.4-java libopencv2.4-jni
+
+2. Symlink `libopencv_java248.so`.
+    For `x64`, while you can put it in `/usr/java/packages/lib/amd64` it's still easier and portable to just use `/usr/lib`.
+    For `ppc64el`, `opencv_java248` will be looked from
+    `/opt/ibm/java-ppc64le-80/jre/lib/ppc64le/compressedrefs:/opt/ibm/java-ppc64le-80/jre/lib/ppc64le:/usr/lib`
+
+        sudo ln -sv /usr/lib/jni/libopencv_java248.so /usr/lib
+
+### PostgreSQL
+
+    CREATE USER smartroad_smartroad_prd PASSWORD '***';
+    CREATE DATABASE smartroad_smartroad_prd TEMPLATE template0 OWNER smartroad_smartroad_prd
+        ENCODING 'UTF8' LC_COLLATE 'en_US.UTF8' LC_CTYPE 'en_US.UTF8';
+    \c smartroad_smartroad_prd
+    CREATE SCHEMA smartroad AUTHORIZATION smartroad_smartroad_prd;
+
+Restore from `dev` snapshot: see **Dump Database to Server** above. 
+
+### Deploy
+
+Run `build-deploy-prd.sh`

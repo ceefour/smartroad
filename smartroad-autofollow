@@ -1,0 +1,4 @@
+#!/bin/bash
+SCRIPT_DIR="$(dirname $0)"
+# For production, create application.properties in the same dir as "culinary" script
+java -cp /usr/share/java/opencv.jar:$SCRIPT_DIR'/target/dependency/*':$SCRIPT_DIR'/target/classes' com.hendyirawan.smartroad.TwitterAutoFollowApp "$@"

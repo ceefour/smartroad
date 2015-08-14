@@ -69,7 +69,8 @@ public class TwitterFollowedSyncApp implements CommandLineRunner {
                     twitterFollowedRepo.save(twitterFollowed);
                     log.info("Saved {}'s friend: {}", myScreenName, user.getScreenName());
                 } catch (DataIntegrityViolationException | ConstraintViolationException e) {
-                    log.info("Skipping {}'s already existing friend {} due to {}", myScreenName, user.getScreenName(), e);
+                    log.info("Skipping {}'s already existing friend {} due to {}",
+                            myScreenName, user.getScreenName(), e.toString());
                 }
             }
             if (page.hasNext()) {
