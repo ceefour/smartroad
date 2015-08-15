@@ -58,10 +58,6 @@
 					<groupId>c3p0</groupId>
 					<artifactId>c3p0</artifactId>
 				</exclusion>
-				<exclusion>
-					<groupId>org.ow2.asm</groupId>
-					<artifactId>asm-debug-all</artifactId>
-				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -98,6 +94,10 @@
             <artifactId>jasperreports</artifactId>
             <version>6.0.4</version>
 			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
 				<exclusion>
 					<groupId>bouncycastle</groupId>
 					<artifactId>bcprov-jdk14</artifactId>
@@ -157,6 +157,11 @@
 			<artifactId>asm-analysis</artifactId>
 			<version>5.0.4</version>
 		</dependency>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm-debug-all</artifactId>
+			<version>5.0.4</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.soluvas</groupId>
@@ -177,6 +182,13 @@
 			<groupId>de.agilecoders.wicket</groupId>
 			<artifactId>wicket-bootstrap-core</artifactId>
 			<version>0.9.8</version>
+			<exclusions>
+				<exclusion>
+					<!-- we require newer org.javassist:javassist:3.18+ -->
+					<groupId>javassist</groupId>
+					<artifactId>javassist</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>de.agilecoders.wicket</groupId>
@@ -450,13 +462,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-remote-shell</artifactId>
-			<exclusions>
-				<exclusion>
-					<!-- we use bcprov-ext-jdk15on -->
-					<groupId>org.bouncycastle</groupId>
-					<artifactId>bcprov-jdk15on</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
