@@ -1,6 +1,7 @@
 package com.hendyirawan.smartroad;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.hendyirawan.smartroad.core.RoadTweetRepository;
 import com.hendyirawan.smartroad.core.TwitterFollowed;
 import com.hendyirawan.smartroad.core.TwitterFollowedRepository;
@@ -69,12 +70,14 @@ public class TwitterAutoFollowApp implements CommandLineRunner {
         final Set<String> followeds = twitterFollowedRepo.findAllFolloweds(twitterConfig.getAppScreenName().toLowerCase());
         log.info("{} has followed {} users: {}", twitterConfig.getAppScreenName(), followeds.size(),
                 followeds.stream().limit(10).toArray());
+        // exclude self!
+        final Sets.SetView<String> exclusions = Sets.union(ImmutableSet.of(twitterConfig.getAppScreenName().toLowerCase()), followeds);
 
         // find relevant twitter users that we haven't followed
 //        final Set<String> relevantScreenNames = roadTweetRepo.findAllDistinctScreenNames();
 //        log.info("Got {} relevant screen names (un-excluded): {}", relevantScreenNames.size(),
 //                relevantScreenNames.stream().limit(10).toArray());
-        final Set<String> relevantScreenNames = roadTweetRepo.findAllDistinctScreenNamesExcluding(followeds);
+        final Set<String> relevantScreenNames = roadTweetRepo.findAllDistinctScreenNamesExcluding(exclusions);
         log.info("Got {} relevant screen names (excluded): {}", relevantScreenNames.size(),
                 relevantScreenNames.stream().limit(10).toArray());
 
@@ -94,8 +97,11 @@ public class TwitterAutoFollowApp implements CommandLineRunner {
             } catch (DataIntegrityViolationException | ConstraintViolationException e) {
                 log.info("Skipping {}'s already existing friend {} due to {}", twitterConfig.getAppScreenName(), followed.getScreenName(), e);
             }
-            log.info("Waiting 1 minute before next follow...");
-            Thread.sleep(60000);
+            // Twitter limit is 1,000 follows per day
+            // (note: there are follow ratio limit too, see https://support.twitter.com/articles/68916)
+            // 2 minute delay means 720 follows max per day
+            log.info("Waiting 2 minute before next follow...");
+            Thread.sleep(2 * 60000);
         }
 
         final int friendCount = twitterFollowedRepo.countByFollowerScreenNameLower(twitterConfig.getAppScreenName().toLowerCase());
