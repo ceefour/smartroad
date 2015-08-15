@@ -11,6 +11,9 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.soluvas.web.bootstrap.FontAwesome;
 import org.soluvas.web.bootstrap.GrowlBehavior;
 import org.soluvas.web.site.SeoBookmarkableMapper;
+import org.springframework.core.env.Environment;
+
+import javax.inject.Inject;
 
 /**
  * Created by ceefour on 27/12/14.
@@ -22,6 +25,9 @@ public abstract class PubLayout extends WebPage {
     public abstract IModel<String> getMetaDescriptionModel();
 
     protected String localePrefId;
+
+    @Inject
+    protected Environment env;
 
     public PubLayout(PageParameters parameters) {
         super(parameters);
