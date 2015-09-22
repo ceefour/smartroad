@@ -58,8 +58,8 @@ public class CameraListPage extends PubLayout {
                 new LinkColumn<>(new Model<>("Road"), "road.name", RoadShowPage.class,
                         new PageParameters().set(SeoBookmarkableMapper.LOCALE_PREF_ID_PARAMETER, localePrefId),
                         "roadId", "road.id"),
-//                new MeasureColumn<>(new Model<>("Length"), SI.METER, "length"), // // TODO: incompatible class :( see https://github.com/opengeospatial/geoapi/issues/8
-//                new MeasureColumn<>(new Model<>("Width"), SI.METER, "width"),
+//                new MeasureColumn<>(new Model<>("Length"), SI.METRE, "length"), // // TODO: incompatible class :( see https://github.com/opengeospatial/geoapi/issues/8
+//                new MeasureColumn<>(new Model<>("Width"), SI.METRE, "width"),
                 new MarkerMapColumn<>(new Model<>("Map"), "lat", "lon"),
                 new DateColumn<>(new Model<>("Surveyed"), "surveyTime"),
                 new PropertyColumn<>(new Model<>("Damage"), "damageKind", "damageKind"),

@@ -272,8 +272,8 @@ mempunyai hotmix yg tipis 25 sampai 50 mm dan jarang terjadi pada jalan hot mix 
             gmap.addOverlay(new GPolyline("red", 6, 0.8f, startLatLng, finishLatLng));
             form.add(gmap);
 
-            form.add(new MeasureLabel("widthLabel", new Model<>(SI.METER), new PropertyModel<>(model, "width")));
-            form.add(new MeasureLabel("startEleLabel", new Model<>(SI.METER), new PropertyModel<>(model, "startEle")));
+            form.add(new MeasureLabel("widthLabel", new Model<>(SI.METRE), new PropertyModel<>(model, "width")));
+            form.add(new MeasureLabel("startEleLabel", new Model<>(SI.METRE), new PropertyModel<>(model, "startEle")));
             form.add(new ExternalLink("geoUri", String.format("geo:%f,%f", startLat, startLon)));
             form.add(new ExternalLink("gmapsLink", String.format("http://maps.google.com/?q=%f,%f", startLat, startLon)));
         } else {
