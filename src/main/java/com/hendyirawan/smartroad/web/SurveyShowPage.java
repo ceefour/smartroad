@@ -26,9 +26,9 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.DynamicImageResource;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.highgui.Highgui;
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.javacpp.opencv_highgui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soluvas.web.site.Interaction;
@@ -151,7 +151,7 @@ public class SurveyShowPage extends PubLayout {
                 final Survey survey = model.getObject();
                 final Camera camera = survey.getCamera();
                 final Road road = camera.getRoad();
-                final Mat cameraMat = Highgui.imdecode(new MatOfByte(survey.getPhoto()), Highgui.CV_LOAD_IMAGE_COLOR);
+                final opencv_core.Mat cameraMat = opencv_highgui.imdecode(new MatOfByte(survey.getPhoto()), opencv_highgui.CV_LOAD_IMAGE_COLOR);
                 Preconditions.checkNotNull(camera.getVanishU(), "Camera '%s' must have vanishU", camera.getName());
                 Preconditions.checkNotNull(camera.getVanishV(), "Camera '%s' must have vanishV", camera.getName());
                 Preconditions.checkNotNull(camera.getLeftU(), "Camera '%s' must have leftU", camera.getName());
@@ -161,19 +161,34 @@ public class SurveyShowPage extends PubLayout {
                         camera.getVanishU(), camera.getVanishV(), camera.getLeftU(), camera.getRightU(),
                         camera.getRoad().getWidth());
 
-                final MatOfByte augmentedBytesMat = new MatOfByte();
-                Highgui.imencode(".jpg", analysis.augmented, augmentedBytesMat);
-                augmentedBytes.setObject(augmentedBytesMat.toArray());
+                final BytePointer augmentedBytesMat = new BytePointer();
+                try {
+                    opencv_highgui.imencode(".jpg", analysis.augmented, augmentedBytesMat);
+                    final byte[] augmentedByteArr = new byte[augmentedBytesMat.limit()];
+                    augmentedBytes.setObject(augmentedByteArr);
+                } finally {
+                    augmentedBytesMat.deallocate();
+                }
 
-                final MatOfByte blurredBytesMat = new MatOfByte();
-                Highgui.imencode(".jpg", analysis.blurred, blurredBytesMat);
-                blurredBytes.setObject(blurredBytesMat.toArray());
+                final BytePointer blurredBytesMat = new BytePointer();
+                try {
+                    opencv_highgui.imencode(".jpg", analysis.blurred, blurredBytesMat);
+                    final byte[] blurredBytesArr = new byte[blurredBytesMat.limit()];
+                    blurredBytes.setObject(blurredBytesArr);
+                } finally {
+                    blurredBytesMat.deallocate();
+                }
 
-                final MatOfByte edgesBytesMat = new MatOfByte();
-                Highgui.imencode(".jpg", analysis.edges, edgesBytesMat);
-                edgesBytes.setObject(edgesBytesMat.toArray());
-                log.info("Edges is {} bytes", SurveyShowPage.this.edgesBytes.getObject().length);
-                Interaction.INFO.info("Edges is %s bytes", SurveyShowPage.this.edgesBytes.getObject().length);
+                final BytePointer edgesBytesMat = new BytePointer();
+                try {
+                    opencv_highgui.imencode(".jpg", analysis.edges, edgesBytesMat);
+                    final byte[] edgesBytesArr = new byte[edgesBytesMat.limit()];
+                    edgesBytes.setObject(edgesBytesArr);
+                    log.info("Edges is {} bytes", SurveyShowPage.this.edgesBytes.getObject().length);
+                    Interaction.INFO.info("Edges is %s bytes", SurveyShowPage.this.edgesBytes.getObject().length);
+                } finally {
+                    edgesBytesMat.deallocate();
+                }
 
                 survey.setDamageKind(analysis.damageKind);
                 survey.setDamageLevel(analysis.damageLevel);

@@ -1,6 +1,7 @@
 package com.hendyirawan.smartroad.core;
 
-import org.opencv.core.Mat;
+import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.javacpp.opencv_core.Mat;
 
 import javax.annotation.Nullable;
 
