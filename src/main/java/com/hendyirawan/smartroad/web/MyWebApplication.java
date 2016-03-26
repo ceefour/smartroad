@@ -8,7 +8,7 @@ import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.settings.IExceptionSettings;
+import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.soluvas.web.bootstrap.sound.Howler;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class MyWebApplication extends WebApplication {
     public void init() {
         super.init();
         getDebugSettings().setAjaxDebugModeEnabled(false);
-        getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
+        getExceptionSettings().setUnexpectedExceptionDisplay(ExceptionSettings.SHOW_EXCEPTION_PAGE);
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));
 
         final IBootstrapSettings bootstrapSettings = new BootstrapSettings()

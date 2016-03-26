@@ -184,7 +184,7 @@
 		<dependency>
 			<groupId>de.agilecoders.wicket</groupId>
 			<artifactId>wicket-bootstrap-core</artifactId>
-			<version>0.9.16</version>
+			<version>0.10.6</version>
 			<exclusions>
 				<exclusion>
 					<!-- we require newer org.javassist:javassist:3.18+ -->
@@ -196,12 +196,12 @@
 		<dependency>
 			<groupId>de.agilecoders.wicket</groupId>
 			<artifactId>wicket-bootstrap-extensions</artifactId>
-			<version>0.9.16</version>
+			<version>0.10.6</version>
 		</dependency>
 		<dependency>
 			<groupId>de.agilecoders.wicket</groupId>
 			<artifactId>wicket-bootstrap-themes</artifactId>
-			<version>0.9.16</version>
+			<version>0.10.6</version>
 			<exclusions>
 				<exclusion>
 					<!-- we require newer org.javassist:javassist:3.18+ -->
@@ -213,17 +213,17 @@
 		<dependency>
 			<groupId>de.agilecoders.wicket</groupId>
 			<artifactId>wicket-bootstrap-less</artifactId>
-			<version>0.9.16</version>
+			<version>0.10.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.wicketstuff</groupId>
 			<artifactId>wicketstuff-annotation</artifactId>
-			<version>6.22.0</version>
+			<version>7.2.0</version>
 		</dependency>
 		<dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-spring</artifactId>
-            <version>6.22.0</version>
+            <version>7.2.0</version>
 			<exclusions>
 				<exclusion>
 					<!-- wicket-ioc depends on cglib:cglib 2.2.2 + asm:asm 3.3.1 which makes everything bad -->
@@ -236,25 +236,25 @@
 			<!-- to override old version specified by wicket-bootstrap-extensions -->
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>
-            <version>6.22.0</version>
+            <version>7.2.0</version>
         </dependency>
 		<dependency>
 			<!-- to override old version specified by wicket-bootstrap-extensions -->
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-request</artifactId>
-            <version>6.22.0</version>
+            <version>7.2.0</version>
         </dependency>
 		<dependency>
 			<!-- to override old version specified by wicket-bootstrap-extensions -->
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-extensions</artifactId>
-            <version>6.22.0</version>
+            <version>7.2.0</version>
         </dependency>
 		<dependency>
 			<!-- to override old version specified by wicket-bootstrap-extensions -->
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-util</artifactId>
-            <version>6.22.0</version>
+            <version>7.2.0</version>
         </dependency>
 		<dependency>
 			<groupId>cglib</groupId>
@@ -265,7 +265,7 @@
 		<dependency>
 			<groupId>org.wicketstuff</groupId>
 			<artifactId>wicketstuff-gmap3</artifactId>
-			<version>6.22.0</version>
+			<version>7.2.0</version>
 		</dependency>
 		<!--<dependency>
 			<groupId>org.geolatte</groupId>

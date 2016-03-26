@@ -115,7 +115,7 @@ public class RoadModifyPage extends PubLayout {
         final GIcon markerA = new GIcon("/map_markers/blue_MarkerA.png");
         final GIcon markerB = new GIcon("/map_markers/blue_MarkerB.png");
 
-        final GMarker startMarker = new GMarker(new GMarkerOptions(gmap, startLatLng, "Start", markerA, null).draggable(true));
+        final GMarker startMarker = new GMarker(new GMarkerOptions(gmap, startLatLng, "Start", markerA).draggable(true));
         startMarker.addListener(GEvent.dragend, new GEventHandler() {
             @Override
             public void onEvent(AjaxRequestTarget target) {
@@ -126,7 +126,7 @@ public class RoadModifyPage extends PubLayout {
             }
         });
         gmap.addOverlay(startMarker);
-        final GMarker finishMarker = new GMarker(new GMarkerOptions(gmap, finishLatLng, "Finish", markerB, null).draggable(true));
+        final GMarker finishMarker = new GMarker(new GMarkerOptions(gmap, finishLatLng, "Finish", markerB).draggable(true));
         finishMarker.addListener(GEvent.dragend, new GEventHandler() {
             @Override
             public void onEvent(AjaxRequestTarget target) {

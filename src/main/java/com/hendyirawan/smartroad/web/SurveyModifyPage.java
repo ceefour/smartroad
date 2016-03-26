@@ -87,7 +87,7 @@ public class SurveyModifyPage extends PubLayout {
 //        form.add(surveyTimeLabel);
         final TextField<DateTime> surveyTimeFld = new TextField<DateTime>("surveyTimeFld", new PropertyModel<>(model, "surveyTime"), DateTime.class) {
             @Override
-            protected void convertInput() {
+            public void convertInput() {
                 setConvertedInput(!Strings.isNullOrEmpty(getInput()) ? new DateTime(getInput()) : null);
             }
         };
